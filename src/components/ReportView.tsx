@@ -209,8 +209,8 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
             <h3 className="text-lg font-bold uppercase tracking-[0.2em] text-blueprint-white">Vector_Log_Registry</h3>
             <div className="flex-1 h-px bg-blueprint-line" />
           </div>
-          <div className="blueprint-panel border-blueprint-line-solid/10 overflow-hidden">
-            <table className="w-full text-left font-mono text-[9px] border-collapse uppercase tracking-widest bg-blueprint-paper/20">
+          <div className="blueprint-panel border-blueprint-line-solid/10 overflow-x-auto scrollbar-thin scrollbar-thumb-blueprint-line-solid/10">
+            <table className="w-full text-left font-mono text-[9px] border-collapse uppercase tracking-widest bg-blueprint-paper/20 min-w-[800px]">
               <thead>
                 <tr className="bg-blueprint-line-solid/5 border-b border-blueprint-line text-blueprint-line-solid/60">
                   <th className="px-4 py-3">Outcome</th>

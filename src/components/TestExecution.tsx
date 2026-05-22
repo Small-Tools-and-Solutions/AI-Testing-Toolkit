@@ -154,7 +154,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
               {pack.status}_STATUS
             </div>
           </div>
-          <h1 className="text-3xl font-bold tracking-[0.15em] uppercase text-blueprint-white">{system.name}</h1>
+          <h1 className="text-3xl font-bold tracking-[0.15em] uppercase text-blueprint-white truncate max-w-xl" title={system.name}>{system.name}</h1>
         </div>
         <div className="flex items-center gap-8">
           <div className="flex flex-col items-end gap-1">
@@ -199,8 +199,8 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
         {/* Sidebar: Vector Schematic Index */}
-        <div className="lg:col-span-1 space-y-4 max-h-[700px] overflow-y-auto blueprint-panel p-6 bg-blueprint-paper/20">
-          <h3 className="blueprint-label border-b border-blueprint-line pb-3 mb-4">Vector_Schematic_Registry</h3>
+        <div className="lg:col-span-1 space-y-4 h-[calc(100vh-320px)] sticky top-0 overflow-y-auto blueprint-panel p-6 bg-blueprint-paper/20 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20">
+          <h3 className="blueprint-label border-b border-blueprint-line pb-3 mb-4 sticky top-0 bg-blueprint-paper/40 backdrop-blur-sm z-10">Vector_Schematic_Registry</h3>
           <div className="space-y-3">
             {cases.map((c, i) => (
               <button 

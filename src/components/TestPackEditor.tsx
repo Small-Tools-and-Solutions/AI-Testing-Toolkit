@@ -139,7 +139,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
       <header className="flex items-center justify-between border-b border-blueprint-line pb-6 gap-6">
         <div>
           <div className="blueprint-label px-2 py-0.5 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20 mb-2">MISSION_PROFILE_SPECIFICATION</div>
-          <h1 className="text-3xl font-bold tracking-[0.15em] uppercase text-blueprint-white">{system.name}</h1>
+          <h1 className="text-3xl font-bold tracking-[0.15em] uppercase text-blueprint-white truncate max-w-xl" title={system.name}>{system.name}</h1>
         </div>
         <div className="flex gap-4">
           <button onClick={handleAbort} className="blueprint-button flex items-center gap-2">
