@@ -108,7 +108,7 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 font-mono text-[10px] uppercase tracking-widest text-blueprint-white/50">
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px] opacity-40">PROBE_LOG_REF</p>
+                <p className="blueprint-label !text-[8px] opacity-40">ASSESSMENT_LOG_REF</p>
                 <p className="text-blueprint-white font-bold">#{pack.id.substring(0, 12).toUpperCase()}</p>
               </div>
               <div className="space-y-1">
@@ -123,7 +123,7 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                 <p className="blueprint-label !text-[8px] opacity-40">OPERATIONAL_ASSESSMENT</p>
                 <div className={`mt-1 px-3 py-1 border font-bold text-[11px] inline-flex items-center gap-2 ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
                   <div className={`w-1.5 h-1.5 rounded-full ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
-                  {pack.status === 'RED' ? 'SYSTEM_VULNERABLE' : pack.status === 'AMBER' ? 'PROBE_INCOMPLETE' : 'INTEGRITY_STABILIZED'}
+                  {pack.status === 'RED' ? 'SYSTEM_VULNERABLE' : pack.status === 'AMBER' ? 'ASSESSMENT_INCOMPLETE' : 'INTEGRITY_STABILIZED'}
                 </div>
               </div>
             </div>

@@ -138,7 +138,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
     setLocalTags(updatedTags);
   };
 
-  if (loading || !pack || !system) return <div className="font-mono text-blueprint-line-solid animate-pulse tracking-[0.3em] uppercase flex items-center justify-center p-20">INITIALIZING_SECURE_BYPASS_v4...</div>;
+  if (loading || !pack || !system) return <div className="font-mono text-blueprint-line-solid animate-pulse tracking-[0.3em] uppercase flex items-center justify-center p-20">INITIALIZING_ASSESSMENT_v4...</div>;
 
   const currentCase = cases[currentIndex];
   const passCount = cases.filter(c => c.result === 'PASS').length;
@@ -152,7 +152,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
       <header className="flex flex-col md:flex-row md:items-center justify-between border-b border-blueprint-line pb-6 gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <span className="blueprint-label px-2 py-0.5 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20">LIVE_PROBE_MONITOR</span>
+            <span className="blueprint-label px-2 py-0.5 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20">LIVE_ASSESSMENT_MONITOR</span>
             <div className={`flex items-center gap-2 px-2 py-0.5 border text-[10px] font-mono font-bold uppercase transition-colors ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
               <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
               {pack.status}_STATUS
@@ -181,7 +181,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
               onClick={onReport} 
               className="blueprint-button blueprint-button-primary flex items-center gap-2"
             >
-              <FileBarChart size={14} /> GENERATE_SUMMARY
+              <FileBarChart size={14} /> VIEW_REPORT
             </button>
           </div>
         </div>
@@ -190,7 +190,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
       {/* Schematic Progress Matrix */}
       <div className="space-y-2">
         <div className="flex justify-between items-end mb-1">
-          <span className="blueprint-label opacity-60">PROBE_COMPLETION_INDEX</span>
+          <span className="blueprint-label opacity-60">ASSESSMENT_COMPLETION_INDEX</span>
           <span className="font-mono text-[10px] text-blueprint-line-solid font-bold">{Math.round((totalCompleted / cases.length) * 100)}% [{totalCompleted}/{cases.length}]</span>
         </div>
         <div className="w-full h-1.5 bg-blueprint-line-solid/10 relative overflow-hidden flex">

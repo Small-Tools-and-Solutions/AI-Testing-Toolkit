@@ -184,7 +184,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
             onClick={handleSaveAndExecute} 
             className="blueprint-button blueprint-button-primary flex items-center gap-2 disabled:opacity-50"
           >
-            {saving ? 'COMMITTING...' : <><ShieldCheck size={14} /> COMMIT & PROBE</>}
+            {saving ? 'COMMITTING...' : <><ShieldCheck size={14} /> COMMIT & ASSESS</>}
           </button>
         </div>
       </header>

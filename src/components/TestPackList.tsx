@@ -60,7 +60,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-blueprint-line pb-8">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-[0.2em] uppercase text-blueprint-white">Operation Registry</h1>
-          <p className="blueprint-label">Master Directory of Ongoing Mission Schematics & Neural Probes</p>
+          <p className="blueprint-label">Master Directory of Ongoing Mission Schematics & Assessments</p>
         </div>
         <button onClick={createNewPack} className="blueprint-button blueprint-button-primary flex items-center gap-3 py-3 px-8 group">
           <Plus size={18} className="transition-transform group-hover:rotate-90" /> COMMENCE_NEW_MISSION
@@ -136,16 +136,16 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                     <button 
                       onClick={() => onSelectPack(pack.id, 'run')}
                       className="px-3 py-1.5 border border-blueprint-line-solid bg-transparent text-blueprint-line-solid flex items-center gap-2 hover:bg-blueprint-line-solid hover:text-blueprint-paper transition-all uppercase font-bold tracking-widest"
-                      title="Probe Execution"
+                      title="Assessment Execution"
                     >
-                      <Play size={10} fill="currentColor" /> PROBE
+                      <Play size={10} fill="currentColor" /> ASSESS
                     </button>
                     <button 
                       onClick={() => onSelectPack(pack.id, 'report')}
                       className="px-3 py-1.5 border border-blueprint-success bg-transparent text-blueprint-success flex items-center gap-2 hover:bg-blueprint-success hover:text-blueprint-paper transition-all uppercase font-bold tracking-widest"
-                      title="Analysis Summary"
+                      title="Report View"
                     >
-                      <FileBarChart size={12} /> ANALYZE
+                      <FileBarChart size={12} /> VIEW REPORT
                     </button>
                   </div>
                 </td>
@@ -163,7 +163,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
             {filteredPacks.length === 0 && (
               <tr>
                 <td colSpan={7} className="p-20 text-center blueprint-label opacity-30 italic">
-                  NO ACTIVE PROBES DISCOVERED OR REGISTERED
+                  NO ACTIVE ASSESSMENTS DISCOVERED OR REGISTERED
                 </td>
               </tr>
             )}
