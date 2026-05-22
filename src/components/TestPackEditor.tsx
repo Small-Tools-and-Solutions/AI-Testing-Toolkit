@@ -4,6 +4,8 @@ import { BASELINE_TESTS } from '../lib/testLibraryData';
 import { Save, Wand2, X, AlertCircle, CheckCircle2, ListPlus, ShieldCheck } from 'lucide-react';
 import { useMemoryStore } from '../lib/memoryStore';
 
+import { motion, AnimatePresence } from 'motion/react';
+
 interface TestPackEditorProps {
   id: string;
   onClose: () => void;
@@ -16,6 +18,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
   const [system, setSystem] = useState<AISystem | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showSyncToast, setShowSyncToast] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generatedTests, setGeneratedTests] = useState<any[]>([]);
 
@@ -49,6 +52,26 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
     }
   };
 
+  const handleManualSave = () => {
+    if (!system || !pack) return;
+    setSaving(true);
+    updateSystem(system);
+    
+    // Auto-init baseline if empty
+    const cases = getCases(id);
+    if (cases.length === 0) {
+      addBaselineTests();
+    } else {
+      updateCaseCounts(id);
+    }
+    
+    setTimeout(() => {
+      setSaving(false);
+      setShowSyncToast(true);
+      setTimeout(() => setShowSyncToast(false), 3000);
+    }, 600);
+  };
+
   const handleSaveAndExecute = () => {
     if (!system || !pack) return;
     setSaving(true);
@@ -62,8 +85,10 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
       addBaselineTests();
     }
     
-    setSaving(false);
-    onExecute();
+    setTimeout(() => {
+      setSaving(false);
+      onExecute();
+    }, 400);
   };
 
   const addBaselineTests = () => {
@@ -144,6 +169,13 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
           <h1 className="text-3xl font-bold tracking-[0.15em] uppercase text-blueprint-white truncate max-w-xl" title={system.name}>{system.name}</h1>
         </div>
         <div className="flex gap-4">
+          <button 
+            disabled={saving}
+            onClick={handleManualSave} 
+            className="blueprint-button flex items-center gap-2"
+          >
+            <Save size={14} /> {saving ? 'SYNCING...' : 'SAVE_PROGRESS'}
+          </button>
           <button onClick={handleAbort} className="blueprint-button flex items-center gap-2">
             <X size={14} /> ABORT_MISSION
           </button>
@@ -152,10 +184,30 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
             onClick={handleSaveAndExecute} 
             className="blueprint-button blueprint-button-primary flex items-center gap-2 disabled:opacity-50"
           >
-            {saving ? 'COMMITTING...' : <><Save size={14} /> COMMIT & PROBE</>}
+            {saving ? 'COMMITTING...' : <><ShieldCheck size={14} /> COMMIT & PROBE</>}
           </button>
         </div>
       </header>
+
+      <AnimatePresence>
+        {showSyncToast && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: 20, x: '-50%' }}
+            className="fixed bottom-10 left-1/2 z-50 pointer-events-none"
+          >
+            <div className="bg-blueprint-paper/80 backdrop-blur-md border border-blueprint-success/30 px-6 py-3 shadow-[0_0_30px_rgba(0,255,157,0.1)] flex items-center gap-4">
+              <CheckCircle2 size={16} className="text-blueprint-success" />
+              <div className="flex flex-col">
+                <span className="font-mono text-[10px] font-bold text-blueprint-success tracking-[0.2em]">SYNCHRONIZATION_COMPLETE</span>
+                <span className="font-mono text-[8px] text-blueprint-white/50 tracking-widest uppercase">LOCAL_STORAGE_NODE_STABILIZED</span>
+              </div>
+              <div className="w-1 h-1 bg-blueprint-success rounded-full animate-ping ml-4"></div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Left Column: Target Profile */}

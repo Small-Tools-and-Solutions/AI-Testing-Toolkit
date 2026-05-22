@@ -197,37 +197,39 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 items-stretch">
         {/* Sidebar: Vector Schematic Index */}
-        <div className="lg:col-span-1 space-y-4 h-[calc(100vh-320px)] sticky top-0 overflow-y-auto blueprint-panel p-6 bg-blueprint-paper/20 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20">
-          <h3 className="blueprint-label border-b border-blueprint-line pb-3 mb-4 sticky top-0 bg-blueprint-paper/40 backdrop-blur-sm z-10">Vector_Schematic_Registry</h3>
-          <div className="space-y-3">
-            {cases.map((c, i) => (
-              <button 
-                key={c.id} 
-                onClick={() => setCurrentIndex(i)}
-                className={`
-                  w-full text-left p-3 border transition-all flex items-center gap-4 relative
-                  ${currentIndex === i 
-                    ? 'border-blueprint-line-solid bg-blueprint-line-solid/10' 
-                    : 'border-blueprint-line-solid/10 hover:border-blueprint-line-solid/30 bg-transparent'}
-                `}
-              >
-                <div className={`
-                  w-2.5 h-2.5 rounded-full shrink-0
-                  ${c.result === 'PASS' ? 'bg-blueprint-success' : c.result === 'FAIL' ? 'bg-blueprint-error' : 'bg-blueprint-accent/40'}
-                `} />
-                <div className="overflow-hidden space-y-1">
-                  <p className={`text-[9px] font-bold uppercase tracking-tight truncate ${currentIndex === i ? 'text-blueprint-line-solid' : 'text-blueprint-white/60'}`}>{c.category}</p>
-                  <p className="text-[8px] font-mono truncate opacity-40 text-blueprint-white tracking-tighter">#{c.id.substring(0, 8).toUpperCase()}</p>
-                </div>
-                {currentIndex === i && (
-                  <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-blueprint-line-solid" />
-                )}
-              </button>
-            ))}
+        <aside className="lg:col-span-1 h-full">
+          <div className="blueprint-panel p-6 bg-blueprint-paper/20 h-full flex flex-col">
+            <h3 className="blueprint-label border-b border-blueprint-line pb-3 mb-4 shrink-0">Vector_Schematic_Registry</h3>
+            <div className="flex-1 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 pr-1">
+              {cases.map((c, i) => (
+                <button 
+                  key={c.id} 
+                  onClick={() => setCurrentIndex(i)}
+                  className={`
+                    w-full text-left p-3 border transition-all flex items-center gap-4 relative
+                    ${currentIndex === i 
+                      ? 'border-blueprint-line-solid bg-blueprint-line-solid/10' 
+                      : 'border-blueprint-line-solid/10 hover:border-blueprint-line-solid/30 bg-transparent'}
+                  `}
+                >
+                  <div className={`
+                    w-2.5 h-2.5 rounded-full shrink-0
+                    ${c.result === 'PASS' ? 'bg-blueprint-success' : c.result === 'FAIL' ? 'bg-blueprint-error' : 'bg-blueprint-accent/40'}
+                  `} />
+                  <div className="overflow-hidden space-y-1">
+                    <p className={`text-[9px] font-bold uppercase tracking-tight truncate ${currentIndex === i ? 'text-blueprint-line-solid' : 'text-blueprint-white/60'}`}>{c.category}</p>
+                    <p className="text-[8px] font-mono truncate opacity-40 text-blueprint-white tracking-tighter">#{c.id.substring(0, 8).toUpperCase()}</p>
+                  </div>
+                  {currentIndex === i && (
+                    <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-blueprint-line-solid" />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        </aside>
 
         {/* Main: Analysis Controller */}
         <div className="lg:col-span-3 space-y-8">
