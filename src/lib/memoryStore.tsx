@@ -3,8 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AISystem, TestPack, TestCase } from '../types';
+
+const STORAGE_KEY = 'cipherwatch_audit_registry_v1';
+
+interface StoredData {
+  systems: AISystem[];
+  testPacks: TestPack[];
+  testCases: Record<string, TestCase[]>;
+}
 
 interface MemoryStoreContextType {
   systems: AISystem[];
@@ -22,9 +30,55 @@ interface MemoryStoreContextType {
 const MemoryStoreContext = createContext<MemoryStoreContextType | undefined>(undefined);
 
 export function MemoryStoreProvider({ children }: { children: ReactNode }) {
-  const [systems, setSystems] = useState<AISystem[]>([]);
-  const [testPacks, setTestPacks] = useState<TestPack[]>([]);
-  const [testCases, setTestCases] = useState<Record<string, TestCase[]>>({});
+  // Initialize from localStorage if available
+  const [systems, setSystems] = useState<AISystem[]>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as StoredData;
+        return parsed.systems || [];
+      } catch (e) {
+        console.error('Failed to parse stored systems:', e);
+      }
+    }
+    return [];
+  });
+
+  const [testPacks, setTestPacks] = useState<TestPack[]>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as StoredData;
+        return parsed.testPacks || [];
+      } catch (e) {
+        console.error('Failed to parse stored packs:', e);
+      }
+    }
+    return [];
+  });
+
+  const [testCases, setTestCases] = useState<Record<string, TestCase[]>>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as StoredData;
+        return parsed.testCases || {};
+      } catch (e) {
+        console.error('Failed to parse stored cases:', e);
+      }
+    }
+    return {};
+  });
+
+  // Sync to localStorage on change
+  useEffect(() => {
+    const data: StoredData = {
+      systems,
+      testPacks,
+      testCases
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }, [systems, testPacks, testCases]);
 
   const updateSystem = (system: AISystem) => {
     setSystems(prev => {
