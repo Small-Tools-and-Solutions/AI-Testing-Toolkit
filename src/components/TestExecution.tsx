@@ -141,7 +141,11 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
   if (loading || !pack || !system) return <div className="font-mono text-blueprint-line-solid animate-pulse tracking-[0.3em] uppercase flex items-center justify-center p-20">INITIALIZING_SECURE_BYPASS_v4...</div>;
 
   const currentCase = cases[currentIndex];
-  const progress = cases.length > 0 ? (cases.filter(c => c.result !== 'NOT TESTED').length / cases.length) * 100 : 0;
+  const passCount = cases.filter(c => c.result === 'PASS').length;
+  const failCount = cases.filter(c => c.result === 'FAIL').length;
+  const totalCompleted = passCount + failCount;
+  const passWidth = cases.length > 0 ? (passCount / cases.length) * 100 : 0;
+  const failWidth = cases.length > 0 ? (failCount / cases.length) * 100 : 0;
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700 pb-20 relative">
@@ -187,20 +191,24 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
       <div className="space-y-2">
         <div className="flex justify-between items-end mb-1">
           <span className="blueprint-label opacity-60">PROBE_COMPLETION_INDEX</span>
-          <span className="font-mono text-[10px] text-blueprint-line-solid font-bold">{Math.round(progress)}% [{cases.filter(c => c.result !== 'NOT TESTED').length}/{cases.length}]</span>
+          <span className="font-mono text-[10px] text-blueprint-line-solid font-bold">{Math.round((totalCompleted / cases.length) * 100)}% [{totalCompleted}/{cases.length}]</span>
         </div>
-        <div className="w-full h-1.5 bg-blueprint-line-solid/10 relative overflow-hidden">
+        <div className="w-full h-1.5 bg-blueprint-line-solid/10 relative overflow-hidden flex">
           <div 
-            className="h-full bg-blueprint-line-solid transition-all duration-700 ease-out shadow-[0_0_15px_rgba(100,255,218,0.3)]" 
-            style={{ width: `${progress}%` }} 
+            className="h-full bg-blueprint-success transition-all duration-700 ease-out shadow-[0_0_15px_rgba(80,250,123,0.3)]" 
+            style={{ width: `${passWidth}%` }} 
+          />
+          <div 
+            className="h-full bg-blueprint-error transition-all duration-700 ease-out shadow-[0_0_15px_rgba(255,85,85,0.3)]" 
+            style={{ width: `${failWidth}%` }} 
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 items-start">
         {/* Sidebar: Vector Schematic Index */}
-        <aside className="lg:col-span-1 h-full">
-          <div className="blueprint-panel p-6 bg-blueprint-paper/20 h-full flex flex-col">
+        <aside className="lg:col-span-1 lg:sticky lg:top-8 h-fit">
+          <div className="blueprint-panel p-6 bg-blueprint-paper/20 max-h-[600px] flex flex-col">
             <h3 className="blueprint-label border-b border-blueprint-line pb-3 mb-4 shrink-0">Vector_Schematic_Registry</h3>
             <div className="flex-1 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 pr-1">
               {cases.map((c, i) => (
