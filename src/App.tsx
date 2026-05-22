@@ -10,7 +10,7 @@ import TestPackEditor from './components/TestPackEditor';
 import TestExecution from './components/TestExecution';
 import TestLibrary from './components/TestLibrary';
 import ReportView from './components/ReportView';
-import { BookOpen, ClipboardList, Library, ShieldCheck, Pin, PinOff } from 'lucide-react';
+import { BookOpen, ClipboardList, Library, ShieldCheck, Pin, PinOff, Sun, Moon } from 'lucide-react';
 import { MemoryStoreProvider } from './lib/memoryStore';
 
 type View = 'guide' | 'missions' | 'library';
@@ -24,6 +24,18 @@ export default function App() {
 }
 
 function AppContent() {
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('theme') as 'dark' | 'light') || 'dark';
+    }
+    return 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   const [currentView, setCurrentView] = useState<View>('missions');
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
   const [activePackId, setActivePackId] = useState<string | null>(null);
@@ -128,6 +140,23 @@ function AppContent() {
             label="MISSIONS" 
           />
         </nav>
+
+        <div className="mt-auto px-4 pb-10">
+          <button 
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className={`
+              w-full p-4 flex items-center gap-6 transition-all relative group/theme transition-colors
+              text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:bg-blueprint-line-solid/5
+            `}
+          >
+            <div className="shrink-0">
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </div>
+            <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
+              {theme === 'dark' ? 'LIGHT_MODE' : 'DARK_MODE'}
+            </span>
+          </button>
+        </div>
       </aside>
 
       {/* Main Schematic Area */}

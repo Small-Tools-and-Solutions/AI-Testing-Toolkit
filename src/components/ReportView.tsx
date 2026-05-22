@@ -37,9 +37,9 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
   const pending = cases.filter(c => c.result === 'NOT TESTED').length;
 
   const chartData = [
-    { name: 'PASS', value: passed, color: '#50fa7b' },
-    { name: 'FAIL', value: failed, color: '#ff5555' },
-    { name: 'PENDING', value: pending, color: '#f7d08a' },
+    { name: 'PASS', value: passed, color: 'var(--blueprint-success)' },
+    { name: 'FAIL', value: failed, color: 'var(--blueprint-error)' },
+    { name: 'PENDING', value: pending, color: 'var(--blueprint-accent)' },
   ];
 
   const exportCSV = () => {
