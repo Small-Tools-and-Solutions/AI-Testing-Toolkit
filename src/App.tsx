@@ -10,7 +10,7 @@ import TestPackEditor from './components/TestPackEditor';
 import TestExecution from './components/TestExecution';
 import TestLibrary from './components/TestLibrary';
 import ReportView from './components/ReportView';
-import { BookOpen, ClipboardList, Library, ShieldCheck } from 'lucide-react';
+import { BookOpen, ClipboardList, Library, ShieldCheck, Pin, PinOff } from 'lucide-react';
 import { MemoryStoreProvider } from './lib/memoryStore';
 
 type View = 'guide' | 'missions' | 'library';
@@ -25,6 +25,7 @@ export default function App() {
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<View>('missions');
+  const [isSidebarPinned, setIsSidebarPinned] = useState(false);
   const [activePackId, setActivePackId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
@@ -81,33 +82,50 @@ function AppContent() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-blueprint-paper font-sans selection:bg-blueprint-line-solid/30">
       {/* Dynamic Sidebar Navigation */}
-      <aside className="w-full lg:w-20 lg:hover:w-64 bg-blueprint-paper border-b border-blueprint-line lg:border-b-0 lg:border-r border-blueprint-line flex flex-col gap-10 z-20 group transition-all duration-300 ease-in-out whitespace-nowrap overflow-hidden">
-        <div className="flex items-center gap-4 p-6 pb-0 overflow-hidden">
-          <ShieldCheck className="text-blueprint-line-solid shrink-0" size={28} />
-          <div className="flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="font-bold text-lg uppercase tracking-widest text-blueprint-white">Audit Suite</span>
-            <span className="technical-marker contents">AUDIT_CORE_v1.4</span>
+      <aside className={`
+        w-full lg:bg-blueprint-paper border-b border-blueprint-line lg:border-b-0 lg:border-r border-blueprint-line flex flex-col gap-10 z-20 group transition-all duration-300 ease-in-out whitespace-nowrap overflow-hidden
+        ${isSidebarPinned ? 'lg:w-64' : 'lg:w-20 lg:hover:w-64'}
+      `}>
+        <div className="flex items-center justify-between p-6 pb-0 overflow-hidden">
+          <div className="flex items-center gap-4">
+            <ShieldCheck className="text-blueprint-line-solid shrink-0" size={28} />
+            <div className={`flex flex-col transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+              <span className="font-bold text-lg uppercase tracking-widest text-blueprint-white">Audit Suite</span>
+              <span className="technical-marker contents">AUDIT_CORE_v1.4</span>
+            </div>
           </div>
+          <button 
+            onClick={() => setIsSidebarPinned(!isSidebarPinned)}
+            className={`
+              hidden lg:flex p-1.5 border border-blueprint-line-solid/20 rounded-xs transition-all
+              ${isSidebarPinned ? 'bg-blueprint-line-solid text-blueprint-paper border-blueprint-line-solid' : 'text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:border-blueprint-line-solid/60 opacity-0 group-hover:opacity-100'}
+            `}
+          >
+            {isSidebarPinned ? <Pin size={12} /> : <PinOff size={12} />}
+          </button>
         </div>
 
         <nav className="flex flex-col gap-1 px-4">
           <NavButton 
             active={currentView === 'guide'} 
+            isSidebarPinned={isSidebarPinned}
             onClick={() => { setCurrentView('guide'); resetViews(); }} 
             icon={<BookOpen size={20} />} 
             label="SCHEMATICS" 
           />
           <NavButton 
-            active={currentView === 'missions' && !activePackId} 
-            onClick={() => { setCurrentView('missions'); resetViews(); }} 
-            icon={<ClipboardList size={20} />} 
-            label="MISSIONS" 
-          />
-          <NavButton 
             active={currentView === 'library'} 
+            isSidebarPinned={isSidebarPinned}
             onClick={() => { setCurrentView('library'); resetViews(); }} 
             icon={<Library size={20} />} 
             label="VECTORS" 
+          />
+          <NavButton 
+            active={currentView === 'missions' && !activePackId} 
+            isSidebarPinned={isSidebarPinned}
+            onClick={() => { setCurrentView('missions'); resetViews(); }} 
+            icon={<ClipboardList size={20} />} 
+            label="MISSIONS" 
           />
         </nav>
       </aside>
@@ -153,7 +171,7 @@ function AppContent() {
   );
 }
 
-function NavButton({ active, onClick, icon, label }: { active: boolean, onClick: () => void, icon: React.ReactNode, label: string }) {
+function NavButton({ active, onClick, icon, label, isSidebarPinned }: { active: boolean, onClick: () => void, icon: React.ReactNode, label: string, isSidebarPinned?: boolean }) {
   return (
     <button 
       onClick={onClick}
@@ -171,12 +189,12 @@ function NavButton({ active, onClick, icon, label }: { active: boolean, onClick:
       <div className={`${active ? 'scale-110' : 'scale-100'} transition-transform shrink-0`}>
         {icon}
       </div>
-      <span className="text-[11px] font-mono font-bold tracking-[0.2em] uppercase opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">
+      <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
         {label}
       </span>
       
       {active && (
-        <span className="ml-auto animate-pulse opacity-0 lg:group-hover:opacity-100">_</span>
+        <span className={`ml-auto animate-pulse ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>_</span>
       )}
     </button>
   );
