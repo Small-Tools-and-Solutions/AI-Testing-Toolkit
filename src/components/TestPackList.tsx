@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { TestPack, AISystem } from '../types';
-import { Plus, Eye, Play, Search, FileBarChart } from 'lucide-react';
+import { Plus, Eye, Play, Search, FileBarChart, Trash2, X, AlertTriangle } from 'lucide-react';
 import { getFriendlyDate } from '../lib/dateUtils';
 import { useMemoryStore } from '../lib/memoryStore';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface TestPackListProps {
   onSelectPack: (id: string, mode?: 'edit' | 'run' | 'report') => void;
 }
 
 export default function TestPackList({ onSelectPack }: TestPackListProps) {
-  const { testPacks, updatePack, updateSystem } = useMemoryStore();
+  const { testPacks, updatePack, updateSystem, deletePack } = useMemoryStore();
   const [searchTerm, setSearchTerm] = useState('');
+  const [packToDelete, setPackToDelete] = useState<string | null>(null);
 
   const createNewPack = () => {
     const systemId = crypto.randomUUID();
@@ -42,6 +44,13 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
     updateSystem(newSystem);
     updatePack(newPack);
     onSelectPack(packId, 'edit');
+  };
+
+  const handleDeleteConfirm = () => {
+    if (packToDelete) {
+      deletePack(packToDelete);
+      setPackToDelete(null);
+    }
   };
 
   const filteredPacks = testPacks.filter(p => p.id.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -78,16 +87,21 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
         <table className="w-full text-left font-mono text-[10px] border-collapse bg-blueprint-paper/30">
           <thead>
             <tr className="bg-blueprint-line-solid/5 text-blueprint-line-solid uppercase tracking-[0.2em] border-b border-blueprint-line">
+              <th className="px-6 py-4 border-r border-blueprint-line font-bold w-16">Idx</th>
               <th className="px-6 py-4 border-r border-blueprint-line font-bold">Status</th>
               <th className="px-6 py-4 border-r border-blueprint-line font-bold">Mission_Ref</th>
               <th className="px-6 py-4 border-r border-blueprint-line font-bold">Temporal_Stamp</th>
               <th className="px-6 py-4 border-r border-blueprint-line font-bold">Target_Signature</th>
-              <th className="px-6 py-4 font-bold">Tactical_Controls</th>
+              <th className="px-6 py-4 font-bold flex-1">Tactical_Controls</th>
+              <th className="px-6 py-4 w-12"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-blueprint-line">
-            {filteredPacks.map((pack) => (
+            {filteredPacks.map((pack, index) => (
               <tr key={pack.id} className="hover:bg-blueprint-line-solid/5 transition-colors group">
+                <td className="px-6 py-5 border-r border-blueprint-line text-blueprint-white/20 whitespace-nowrap">
+                  {(index + 1).toString().padStart(4, '0')}
+                </td>
                 <td className="px-6 py-5 border-r border-blueprint-line">
                   <div className="flex items-center gap-3">
                     <div className={`
@@ -135,11 +149,20 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                     </button>
                   </div>
                 </td>
+                <td className="px-6 py-5 text-right">
+                  <button 
+                    onClick={() => setPackToDelete(pack.id)}
+                    className="p-1.5 text-blueprint-error/40 hover:text-blueprint-error hover:bg-blueprint-error/10 transition-all rounded-xs"
+                    title="Purge Schematic"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </td>
               </tr>
             ))}
             {filteredPacks.length === 0 && (
               <tr>
-                <td colSpan={5} className="p-20 text-center blueprint-label opacity-30 italic">
+                <td colSpan={7} className="p-20 text-center blueprint-label opacity-30 italic">
                   NO ACTIVE PROBES DISCOVERED OR REGISTERED
                 </td>
               </tr>
@@ -147,6 +170,54 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {packToDelete && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setPackToDelete(null)}
+              className="absolute inset-0 bg-blueprint-paper/80 backdrop-blur-md"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-md bg-blueprint-paper border border-blueprint-error/30 p-8 shadow-[0_0_50px_rgba(255,70,70,0.15)]"
+            >
+              <div className="flex items-start gap-6 mb-8">
+                <div className="p-3 bg-blueprint-error/10 border border-blueprint-error/20">
+                  <AlertTriangle className="text-blueprint-error" size={24} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold uppercase tracking-[0.2em] text-blueprint-white">Confirm_Schematic_Purge</h3>
+                  <p className="font-mono text-[10px] text-blueprint-white/50 leading-relaxed uppercase tracking-widest">
+                    You are about to permanently delete mission schematic <span className="text-blueprint-error">#{packToDelete.substring(0, 8).toUpperCase()}</span>. This action is irreversible. All associated vector logs and audit signatures will be purged.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setPackToDelete(null)}
+                  className="flex-1 blueprint-button border-blueprint-line-solid/20 text-blueprint-line-solid/40 hover:text-blueprint-line-solid"
+                >
+                  ABORT_ACTION
+                </button>
+                <button 
+                  onClick={handleDeleteConfirm}
+                  className="flex-1 blueprint-button bg-blueprint-error text-blueprint-paper border-blueprint-error hover:bg-blueprint-error/80"
+                >
+                  EXECUTE_PURGE
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
