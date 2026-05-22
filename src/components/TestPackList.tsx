@@ -106,12 +106,12 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
       <div className="relative group">
         <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
           <Search className="text-blueprint-line-solid/40 group-focus-within:text-blueprint-line-solid transition-colors" size={16} />
-          <span className="text-[10px] font-mono text-blueprint-line-solid/20 hidden sm:inline">Search:</span>
+          <span className="text-xs font-mono text-blueprint-line-solid/20 hidden sm:inline">Search:</span>
         </div>
         <input 
           type="text" 
           placeholder="Filter by ID or target system..." 
-          className="blueprint-input w-full pl-32 h-12 uppercase text-[11px] tracking-widest"
+          className="blueprint-input w-full pl-32 h-14 uppercase text-xs tracking-widest"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -119,7 +119,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
 
       {/* Schematic List Grid */}
       <div className="blueprint-panel border-blueprint-line-solid/20 overflow-hidden">
-        <table className="w-full text-left font-mono text-[10px] border-collapse bg-blueprint-paper/30">
+        <table className="w-full text-left font-mono text-xs border-collapse bg-blueprint-paper/30">
           <thead>
             <tr className="bg-blueprint-line-solid/5 text-blueprint-line-solid font-bold uppercase tracking-[0.2em] border-b border-blueprint-line">
               <th className="px-6 py-4 w-12 border-r border-blueprint-line">
@@ -165,7 +165,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                         pack.status === 'AMBER' ? 'bg-blueprint-accent' : 
                         'bg-blueprint-success'}
                     `} />
-                    <span className={`text-[8px] font-bold ${pack.status === 'RED' ? 'text-blueprint-error' : pack.status === 'AMBER' ? 'text-blueprint-accent' : 'text-blueprint-success'}`}>
+                    <span className={`text-[10px] font-bold ${pack.status === 'RED' ? 'text-blueprint-error' : pack.status === 'AMBER' ? 'text-blueprint-accent' : 'text-blueprint-success'}`}>
                       {pack.status === 'RED' ? 'CRITICAL' : pack.status === 'AMBER' ? 'PENDING' : 'STABILIZED'}
                     </span>
                   </div>
@@ -249,7 +249,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                 </div>
                 <div className="space-y-3 overflow-hidden">
                   <h3 className="text-xl font-bold uppercase tracking-[0.1em] text-blueprint-white whitespace-nowrap">Confirm Deletion</h3>
-                  <p className="font-mono text-[10px] text-blueprint-white/50 leading-relaxed uppercase tracking-widest">
+                  <p className="font-mono text-xs text-blueprint-white/50 leading-relaxed uppercase tracking-widest">
                     {Array.isArray(packToDelete) 
                       ? `You are about to permanently delete [ ${packToDelete.length} ] assessments. This action is irreversible.`
                       : <>You are about to permanently delete the assessment <span className="text-blueprint-error">#{packToDelete.substring(0, 8).toUpperCase()}</span>. This action is irreversible.</>

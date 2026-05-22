@@ -152,9 +152,9 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
       <header className="flex flex-col md:flex-row md:items-center justify-between border-b border-blueprint-line pb-6 gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <span className="blueprint-label px-2 py-0.5 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20">Live Assessment</span>
-            <div className={`flex items-center gap-2 px-2 py-0.5 border text-[10px] font-mono font-bold uppercase transition-colors ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
-              <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
+            <span className="blueprint-label px-2 py-1 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20">Live Assessment</span>
+            <div className={`flex items-center gap-2 px-2 py-1 border text-xs font-mono font-bold uppercase transition-colors ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
+              <div className={`w-2 h-2 rounded-full animate-pulse ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
               {pack.status} Status
             </div>
           </div>
@@ -163,11 +163,11 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
         <div className="flex items-center gap-8">
           <div className="flex flex-col items-end gap-1">
             {saving ? (
-               <div className="flex items-center gap-2 font-mono text-[9px] font-bold text-blueprint-line-solid animate-pulse">
+               <div className="flex items-center gap-2 font-mono text-[11px] font-bold text-blueprint-line-solid animate-pulse">
                   Saving changes...
                </div>
             ) : lastSaved && (
-               <div className="font-mono text-[9px] font-bold text-blueprint-white/40 uppercase tracking-tighter">
+               <div className="font-mono text-[11px] font-bold text-blueprint-white/40 uppercase tracking-tighter">
                   Last saved: {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                </div>
             )}
@@ -191,7 +191,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
       <div className="space-y-2">
         <div className="flex justify-between items-end mb-1">
           <span className="blueprint-label opacity-60">Assessment Progress</span>
-          <span className="font-mono text-[10px] text-blueprint-line-solid font-bold">{Math.round((totalCompleted / cases.length) * 100)}% [{totalCompleted}/{cases.length}]</span>
+          <span className="font-mono text-xs text-blueprint-line-solid font-bold">{Math.round((totalCompleted / cases.length) * 100)}% [{totalCompleted}/{cases.length}]</span>
         </div>
         <div className="w-full h-1.5 bg-blueprint-line-solid/10 relative overflow-hidden flex">
           <div 
@@ -227,8 +227,8 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                     ${c.result === 'PASS' ? 'bg-blueprint-success' : c.result === 'FAIL' ? 'bg-blueprint-error' : 'bg-blueprint-accent/40'}
                   `} />
                   <div className="overflow-hidden space-y-1">
-                    <p className={`text-[9px] font-bold uppercase tracking-tight truncate ${currentIndex === i ? 'text-blueprint-line-solid' : 'text-blueprint-white/60'}`}>{c.category}</p>
-                    <p className="text-[8px] font-mono truncate opacity-40 text-blueprint-white tracking-tighter">#{c.id.substring(0, 8).toUpperCase()}</p>
+                    <p className={`text-xs font-bold uppercase tracking-tight truncate ${currentIndex === i ? 'text-blueprint-line-solid' : 'text-blueprint-white/60'}`}>{c.category}</p>
+                    <p className="text-[10px] font-mono truncate opacity-40 text-blueprint-white tracking-tighter">#{c.id.substring(0, 8).toUpperCase()}</p>
                   </div>
                   {currentIndex === i && (
                     <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-blueprint-line-solid" />
@@ -246,17 +246,17 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
               <header className="flex items-start justify-between border-b border-blueprint-line pb-8">
                 <div className="space-y-4 flex-1">
                   <div className="flex gap-3">
-                    <span className="px-2 py-0.5 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20 text-blueprint-line-solid text-[9px] font-mono font-bold tracking-widest uppercase">{currentCase.category}</span>
-                    <span className="px-2 py-0.5 bg-blueprint-paper/50 border border-blueprint-line/40 text-blueprint-white/50 text-[9px] font-mono tracking-widest uppercase">{currentCase.riskArea}</span>
+                    <span className="px-2 py-0.5 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20 text-blueprint-line-solid text-xs font-mono font-bold tracking-widest uppercase">{currentCase.category}</span>
+                    <span className="px-2 py-0.5 bg-blueprint-paper/50 border border-blueprint-line/40 text-blueprint-white/50 text-xs font-mono tracking-widest uppercase">{currentCase.riskArea}</span>
                   </div>
                   <div 
                     onClick={() => handleCopy(currentCase.prompt, 'prompt')}
                     className="space-y-1 group/copy cursor-pointer relative"
                   >
                     <div className="flex items-center gap-3">
-                      <p className="blueprint-label opacity-40 text-[9px]">Test Prompt:</p>
+                      <p className="blueprint-label opacity-40 text-xs">Test Prompt:</p>
                       <div className={`transition-all ${copiedType === 'prompt' ? 'text-blueprint-success' : 'text-blueprint-line-solid opacity-0 group-hover/copy:opacity-100'}`}>
-                        {copiedType === 'prompt' ? <CheckCircle2 size={12} /> : <Copy size={12} />}
+                        {copiedType === 'prompt' ? <CheckCircle2 size={14} /> : <Copy size={14} />}
                       </div>
                     </div>
                     <h2 className="text-2xl font-bold uppercase tracking-[0.05em] text-blueprint-white leading-tight pr-10 hover:text-blueprint-line-solid transition-colors">{currentCase.prompt}</h2>
@@ -270,9 +270,9 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                     )}
                   </div>
                 </div>
-                <div className="blueprint-panel p-4 text-center min-w-[100px] bg-blueprint-line-solid/5 border-blueprint-line-solid/20">
-                  <p className="blueprint-label !text-[8px] opacity-40 mb-1">Test ID</p>
-                  <p className="font-mono font-bold text-blueprint-line-solid uppercase text-lg tracking-widest leading-none">{currentCase.libraryId || `V_${(currentIndex + 1).toString().padStart(2, '0')}`}</p>
+                <div className="blueprint-panel p-4 text-center min-w-[120px] bg-blueprint-line-solid/5 border-blueprint-line-solid/20">
+                  <p className="blueprint-label !text-[10px] opacity-40 mb-1">Test ID</p>
+                  <p className="font-mono font-bold text-blueprint-line-solid uppercase text-xl tracking-widest leading-none">{currentCase.libraryId || `V_${(currentIndex + 1).toString().padStart(2, '0')}`}</p>
                 </div>
               </header>
 

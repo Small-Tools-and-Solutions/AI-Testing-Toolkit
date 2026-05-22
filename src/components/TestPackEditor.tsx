@@ -191,8 +191,8 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
         <div className="flex items-center gap-6">
           {lastSaved && (
             <div className="flex flex-col items-end">
-              <span className="text-[8px] font-mono font-bold text-blueprint-line-solid/50 uppercase tracking-widest">Last Commit</span>
-              <span className="text-[10px] font-mono text-blueprint-line-solid font-bold tracking-tighter">
+              <span className="text-[10px] font-mono font-bold text-blueprint-line-solid/50 uppercase tracking-widest">Last Commit</span>
+              <span className="text-xs font-mono text-blueprint-line-solid font-bold tracking-tighter">
                 {getFriendlyDate(lastSaved)}
               </span>
             </div>
@@ -231,8 +231,8 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
             <div className="bg-blueprint-paper/80 backdrop-blur-md border border-blueprint-success/30 px-6 py-3 shadow-[0_0_30px_rgba(0,255,157,0.1)] flex items-center gap-4">
               <CheckCircle2 size={16} className="text-blueprint-success" />
               <div className="flex flex-col">
-                <span className="font-mono text-[10px] font-bold text-blueprint-success tracking-[0.2em]">Sync Complete</span>
-                <span className="font-mono text-[8px] text-blueprint-white/50 tracking-widest uppercase">Progress saved successfully</span>
+                <span className="font-mono text-xs font-bold text-blueprint-success tracking-[0.2em]">Sync Complete</span>
+                <span className="font-mono text-[10px] text-blueprint-white/50 tracking-widest uppercase">Progress saved successfully</span>
               </div>
               <div className="w-1 h-1 bg-blueprint-success rounded-full animate-ping ml-4"></div>
             </div>
@@ -294,7 +294,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
                 <Wand2 size={24} className="text-blueprint-line-solid shrink-0 animate-pulse" /> Security Test Generator
               </h3>
             </div>
-            <p className="font-mono text-[10px] mb-8 text-blueprint-white/50 leading-relaxed uppercase tracking-wider">
+            <p className="font-mono text-xs mb-8 text-blueprint-white/50 leading-relaxed uppercase tracking-wider">
               Automatically generate security tests based on the system profile and details.
             </p>
             

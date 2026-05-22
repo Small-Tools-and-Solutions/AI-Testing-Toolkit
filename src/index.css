@@ -41,7 +41,7 @@
     background-image: 
       linear-gradient(var(--blueprint-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-size: 60px 60px;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
@@ -61,7 +61,7 @@
 }
 
 .blueprint-button {
-  @apply px-4 py-2 bg-transparent border border-blueprint-line-solid text-blueprint-line-solid font-mono text-xs uppercase tracking-widest transition-all hover:bg-blueprint-line-solid/10 active:scale-[0.98] disabled:opacity-50;
+  @apply px-5 py-3 bg-transparent border border-blueprint-line-solid text-blueprint-line-solid font-mono text-sm uppercase tracking-widest transition-all hover:bg-blueprint-line-solid/10 active:scale-[0.98] disabled:opacity-50;
 }
 
 .blueprint-button-primary {
@@ -69,14 +69,14 @@
 }
 
 .blueprint-input {
-  @apply bg-blueprint-paper/50 border border-blueprint-line-solid/30 p-2 text-blueprint-white font-mono text-sm focus:outline-none focus:border-blueprint-line-solid transition-colors;
+  @apply bg-blueprint-paper/50 border border-blueprint-line-solid/30 p-3 text-blueprint-white font-mono text-base focus:outline-none focus:border-blueprint-line-solid transition-colors;
 }
 
 .blueprint-label {
-  @apply font-mono text-[10px] text-blueprint-accent uppercase tracking-tighter;
+  @apply font-mono text-xs text-blueprint-accent uppercase tracking-tighter font-bold;
 }
 
 .technical-marker {
-  @apply text-[8px] font-mono text-blueprint-line-solid/40 absolute;
+  @apply text-[10px] font-mono text-blueprint-line-solid/40 absolute;
 }
 

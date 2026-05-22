@@ -151,7 +151,7 @@ function AppContent() {
             <div className="shrink-0">
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             </div>
-            <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
+            <span className={`text-xs font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
               {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
             </span>
           </button>
@@ -160,7 +160,7 @@ function AppContent() {
 
       {/* Main Schematic Area */}
       <main className="flex-1 p-6 lg:p-12 overflow-y-auto relative">
-        <div className="max-w-6xl mx-auto space-y-10">
+        <div className="max-w-[1600px] mx-auto space-y-10">
           {isEditing && activePackId && (
             <TestPackEditor 
               id={activePackId} 
@@ -213,7 +213,7 @@ function NavButton({ active, onClick, icon, label, isSidebarPinned }: { active: 
       <div className={`${active ? 'scale-110' : 'scale-100'} transition-transform shrink-0`}>
         {icon}
       </div>
-      <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+      <span className={`text-xs font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
         {label}
       </span>
       

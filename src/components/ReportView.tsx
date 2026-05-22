@@ -113,23 +113,23 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
               <div className="h-0.5 bg-blueprint-line-solid/30 w-64" />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 font-mono text-[10px] uppercase tracking-widest text-blueprint-white/50">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 font-mono text-xs uppercase tracking-widest text-blueprint-white/50">
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px]">Assessment ID</p>
+                <p className="blueprint-label !text-[10px]">Assessment ID</p>
                 <p className="text-blueprint-white font-bold">#{pack.id.substring(0, 12).toUpperCase()}</p>
               </div>
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px]">Target System</p>
+                <p className="blueprint-label !text-[10px]">Target System</p>
                 <p className="text-blueprint-white font-bold">{system.name}</p>
               </div>
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px]">Completion Timestamp</p>
+                <p className="blueprint-label !text-[10px]">Completion Timestamp</p>
                 <p className="text-blueprint-white font-bold">{getFriendlyDate(new Date(pack.updatedAt))} [{new Date(pack.updatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}]</p>
               </div>
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px]">Security Assessment</p>
-                <div className={`mt-1 px-3 py-1 border font-bold text-[11px] inline-flex items-center gap-2 ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
-                  <div className={`w-1.5 h-1.5 rounded-full ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
+                <p className="blueprint-label !text-[10px]">Security Assessment</p>
+                <div className={`mt-1 px-3 py-1 border font-bold text-xs inline-flex items-center gap-2 ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
+                  <div className={`w-2 h-2 rounded-full ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
                   {pack.status === 'RED' ? 'System Vulnerable' : pack.status === 'AMBER' ? 'Assessment Incomplete' : 'Verified Secure'}
                 </div>
               </div>
@@ -148,7 +148,7 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                   </BarChart>
                 </ResponsiveContainer>
              </div>
-             <p className="blueprint-label !text-[9px] mt-6 tracking-[0.3em]">VECTOR_OUTCOME_DISTRIBUTION</p>
+             <p className="blueprint-label !text-xs mt-6 tracking-[0.3em]">VECTOR_OUTCOME_DISTRIBUTION</p>
           </div>
         </section>
 
@@ -158,16 +158,16 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
             <h3 className="text-lg font-bold uppercase tracking-[0.2em] text-blueprint-white">System Profile</h3>
             <div className="flex-1 h-px bg-blueprint-line" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 font-mono text-[10px] leading-loose uppercase tracking-wider">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 font-mono text-xs leading-loose uppercase tracking-wider">
             <div className="space-y-6">
-               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Primary Purpose</p><p className="text-blueprint-white/80">{system.purpose || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Target Users</p><p className="text-blueprint-white/80">{system.targetUsers || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Sensitive Data Context</p><p className="text-blueprint-white/80">{system.sensitiveData || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Primary Purpose</p><p className="text-blueprint-white/80">{system.purpose || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Target Users</p><p className="text-blueprint-white/80">{system.targetUsers || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Sensitive Data Context</p><p className="text-blueprint-white/80">{system.sensitiveData || 'Not Defined'}</p></div>
             </div>
             <div className="space-y-6">
-               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Refusal Guidelines</p><p className="text-blueprint-white/80">{system.mustRefuse || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Known Risk Factors</p><p className="text-blueprint-white/80">{system.knownRisks || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Vertical Domain</p><p className="text-blueprint-white/80">{system.industry || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Refusal Guidelines</p><p className="text-blueprint-white/80">{system.mustRefuse || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Known Risk Factors</p><p className="text-blueprint-white/80">{system.knownRisks || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Vertical Domain</p><p className="text-blueprint-white/80">{system.industry || 'Not Defined'}</p></div>
             </div>
           </div>
         </section>
@@ -181,15 +181,15 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
             </div>
             
             {/* Filter Controls */}
-            <div className="flex items-center gap-2 bg-blueprint-line-solid/5 p-1 border border-blueprint-line">
-              <div className="px-2 text-[8px] font-mono text-blueprint-line-solid/80 flex items-center gap-1">
-                <Filter size={10} /> Filter:
+            <div className="flex items-center gap-2 bg-blueprint-line-solid/5 p-2 border border-blueprint-line">
+              <div className="px-2 text-[10px] font-mono text-blueprint-line-solid/80 flex items-center gap-1">
+                <Filter size={12} /> Filter:
               </div>
               {(['ALL', 'PASS', 'FAIL', 'NOT TESTED'] as const).map((f) => (
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
-                  className={`px-3 py-1 text-[8px] font-mono font-bold tracking-tighter transition-all ${
+                  className={`px-4 py-1.5 text-[10px] font-mono font-bold tracking-tighter transition-all ${
                     filter === f 
                       ? 'bg-blueprint-line-solid text-blueprint-paper shadow-[0_0_10px_rgba(100,255,218,0.3)]' 
                       : 'text-blueprint-white/40 hover:text-blueprint-white hover:bg-blueprint-line-solid/10'
@@ -202,7 +202,7 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
           </div>
 
           <div className="blueprint-panel border-blueprint-line-solid/10 overflow-x-auto scrollbar-thin scrollbar-thumb-blueprint-line-solid/10">
-            <table className="w-full text-left font-mono text-[9px] border-collapse uppercase tracking-widest bg-blueprint-paper/20 min-w-[800px]">
+            <table className="w-full text-left font-mono text-[11px] border-collapse uppercase tracking-widest bg-blueprint-paper/20 min-w-[800px]">
               <thead>
                 <tr className="bg-blueprint-line-solid/5 border-b border-blueprint-line text-blueprint-line-solid/60">
                   <th className="px-4 py-3 w-10"></th>
@@ -250,12 +250,12 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                                   <div className="p-8 space-y-6 border-l-2 border-blueprint-line-solid/30 ml-4 mb-4">
                                     <div className="flex items-start justify-between">
                                       <div className="flex gap-4 items-start">
-                                        <div className={`p-2 border ${c.result === 'PASS' ? 'border-blueprint-success bg-blueprint-success/5 text-blueprint-success' : c.result === 'FAIL' ? 'border-blueprint-error bg-blueprint-error/5 text-blueprint-error' : 'border-blueprint-accent bg-blueprint-accent/5 text-blueprint-accent'}`}>
-                                          <span className="text-[12px] font-black">{c.libraryId || 'UNC_REF'}</span>
+                                        <div className={`p-3 border ${c.result === 'PASS' ? 'border-blueprint-success bg-blueprint-success/5 text-blueprint-success' : c.result === 'FAIL' ? 'border-blueprint-error bg-blueprint-error/5 text-blueprint-error' : 'border-blueprint-accent bg-blueprint-accent/5 text-blueprint-accent'}`}>
+                                          <span className="text-sm font-black">{c.libraryId || 'UNC_REF'}</span>
                                         </div>
                                         <div className="space-y-1">
-                                          <span className={`px-2 py-0.5 text-[8px] font-mono font-black uppercase tracking-widest ${c.result === 'PASS' ? 'bg-blueprint-success text-blueprint-paper' : c.result === 'FAIL' ? 'bg-blueprint-error text-blueprint-paper' : 'bg-blueprint-accent text-blueprint-paper'}`}>{c.riskArea}</span>
-                                          <h4 className="text-lg font-bold uppercase tracking-tight text-blueprint-white">{c.prompt}</h4>
+                                          <span className={`px-2 py-0.5 text-[10px] font-mono font-black uppercase tracking-widest ${c.result === 'PASS' ? 'bg-blueprint-success text-blueprint-paper' : c.result === 'FAIL' ? 'bg-blueprint-error text-blueprint-paper' : 'bg-blueprint-accent text-blueprint-paper'}`}>{c.riskArea}</span>
+                                          <h4 className="text-xl font-bold uppercase tracking-tight text-blueprint-white">{c.prompt}</h4>
                                         </div>
                                       </div>
                                       <div className={`px-4 py-1.5 border font-black uppercase tracking-widest text-xs ${c.result === 'PASS' ? 'border-blueprint-success text-blueprint-success' : c.result === 'FAIL' ? 'border-blueprint-error text-blueprint-error' : 'border-blueprint-accent text-blueprint-accent'}`}>

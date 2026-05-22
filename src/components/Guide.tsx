@@ -53,10 +53,10 @@ export default function Guide() {
             </div>
             
             <h3 className="text-xl font-bold uppercase mb-4 text-blueprint-white tracking-widest flex items-center gap-2">
-              <span className="text-[10px] font-mono text-blueprint-line-solid/50">0{i + 1}.</span> {step.title}
+              <span className="text-xs font-mono text-blueprint-line-solid/50">0{i + 1}.</span> {step.title}
             </h3>
             
-            <p className="text-[11px] font-mono leading-relaxed text-blueprint-white/60 group-hover:text-blueprint-white/80 transition-colors">
+            <p className="text-sm font-mono leading-relaxed text-blueprint-white/60 group-hover:text-blueprint-white/80 transition-colors">
               {step.desc}
             </p>
           </div>
@@ -64,7 +64,7 @@ export default function Guide() {
       </div>
 
       <div className="blueprint-panel p-10 bg-blueprint-line-solid/5 border-blueprint-line-solid/40 relative">
-        <div className="absolute -top-3 left-10 px-4 bg-blueprint-paper border border-blueprint-line-solid/40 font-mono text-[10px] text-blueprint-accent uppercase tracking-[0.3em] font-bold">
+        <div className="absolute -top-3 left-10 px-4 bg-blueprint-paper border border-blueprint-line-solid/40 font-mono text-xs text-blueprint-accent uppercase tracking-[0.3em] font-bold">
           Platform Methodology
         </div>
         
