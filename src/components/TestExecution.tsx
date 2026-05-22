@@ -138,7 +138,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
     setLocalTags(updatedTags);
   };
 
-  if (loading || !pack || !system) return <div className="font-mono text-blueprint-line-solid animate-pulse tracking-[0.3em] uppercase flex items-center justify-center p-20">INITIALIZING_ASSESSMENT_v4...</div>;
+  if (loading || !pack || !system) return <div className="font-mono text-blueprint-line-solid animate-pulse tracking-[0.3em] uppercase flex items-center justify-center p-20">Initializing Assessment...</div>;
 
   const currentCase = cases[currentIndex];
   const passCount = cases.filter(c => c.result === 'PASS').length;
@@ -152,10 +152,10 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
       <header className="flex flex-col md:flex-row md:items-center justify-between border-b border-blueprint-line pb-6 gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <span className="blueprint-label px-2 py-0.5 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20">LIVE_ASSESSMENT_MONITOR</span>
+            <span className="blueprint-label px-2 py-0.5 bg-blueprint-line-solid/10 border border-blueprint-line-solid/20">Live Assessment</span>
             <div className={`flex items-center gap-2 px-2 py-0.5 border text-[10px] font-mono font-bold uppercase transition-colors ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
               <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
-              {pack.status}_STATUS
+              {pack.status} Status
             </div>
           </div>
           <h1 className="text-3xl font-bold tracking-[0.15em] uppercase text-blueprint-white truncate max-w-xl" title={system.name}>{system.name}</h1>
@@ -164,33 +164,33 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
           <div className="flex flex-col items-end gap-1">
             {saving ? (
                <div className="flex items-center gap-2 font-mono text-[9px] font-bold text-blueprint-line-solid animate-pulse">
-                  SYNC_IN_PROGRESS...
+                  Saving changes...
                </div>
             ) : lastSaved && (
                <div className="font-mono text-[9px] font-bold text-blueprint-white/40 uppercase tracking-tighter">
-                  LAST_COMMIT: {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                  Last saved: {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                </div>
             )}
           </div>
           
           <div className="flex gap-4">
             <button onClick={onClose} className="blueprint-button flex items-center gap-2">
-              <X size={14} /> ABORT_SESSION
+              <X size={14} /> Close
             </button>
             <button 
               onClick={onReport} 
               className="blueprint-button blueprint-button-primary flex items-center gap-2"
             >
-              <FileBarChart size={14} /> VIEW_REPORT
+              <FileBarChart size={14} /> View Report
             </button>
           </div>
         </div>
       </header>
 
-      {/* Schematic Progress Matrix */}
+      {/* Progress Matrix */}
       <div className="space-y-2">
         <div className="flex justify-between items-end mb-1">
-          <span className="blueprint-label opacity-60">ASSESSMENT_COMPLETION_INDEX</span>
+          <span className="blueprint-label opacity-60">Assessment Progress</span>
           <span className="font-mono text-[10px] text-blueprint-line-solid font-bold">{Math.round((totalCompleted / cases.length) * 100)}% [{totalCompleted}/{cases.length}]</span>
         </div>
         <div className="w-full h-1.5 bg-blueprint-line-solid/10 relative overflow-hidden flex">
@@ -206,10 +206,10 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 items-start">
-        {/* Sidebar: Vector Schematic Index */}
+        {/* Sidebar: Test List */}
         <aside className="lg:col-span-1 lg:sticky lg:top-8 h-fit">
           <div className="blueprint-panel p-6 bg-blueprint-paper/20 max-h-[600px] flex flex-col">
-            <h3 className="blueprint-label border-b border-blueprint-line pb-3 mb-4 shrink-0">Vector_Schematic_Registry</h3>
+            <h3 className="blueprint-label border-b border-blueprint-line pb-3 mb-4 shrink-0">Assessment Test List</h3>
             <div className="flex-1 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 pr-1">
               {cases.map((c, i) => (
                 <button 
@@ -254,7 +254,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                     className="space-y-1 group/copy cursor-pointer relative"
                   >
                     <div className="flex items-center gap-3">
-                      <p className="blueprint-label opacity-40 text-[9px]">TARGET_ANALYSIS_OBJECTIVE:</p>
+                      <p className="blueprint-label opacity-40 text-[9px]">Test Prompt:</p>
                       <div className={`transition-all ${copiedType === 'prompt' ? 'text-blueprint-success' : 'text-blueprint-line-solid opacity-0 group-hover/copy:opacity-100'}`}>
                         {copiedType === 'prompt' ? <CheckCircle2 size={12} /> : <Copy size={12} />}
                       </div>
@@ -266,12 +266,12 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                       </p>
                     )}
                     {copiedType === 'prompt' && (
-                      <div className="absolute top-0 right-0 bg-blueprint-success text-blueprint-paper text-[8px] px-2 py-1 font-mono font-bold uppercase">COMMITTED_TO_CLIPBOARD</div>
+                      <div className="absolute top-0 right-0 bg-blueprint-success text-blueprint-paper text-[8px] px-2 py-1 font-mono font-bold uppercase">Copied to Clipboard</div>
                     )}
                   </div>
                 </div>
                 <div className="blueprint-panel p-4 text-center min-w-[100px] bg-blueprint-line-solid/5 border-blueprint-line-solid/20">
-                  <p className="blueprint-label !text-[8px] opacity-40 mb-1">UNIT_REF</p>
+                  <p className="blueprint-label !text-[8px] opacity-40 mb-1">Test ID</p>
                   <p className="font-mono font-bold text-blueprint-line-solid uppercase text-lg tracking-widest leading-none">{currentCase.libraryId || `V_${(currentIndex + 1).toString().padStart(2, '0')}`}</p>
                 </div>
               </header>
@@ -279,13 +279,13 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10 flex-1">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <label className="blueprint-label">EXPECTED_BEHAVIOR_MODEL</label>
+                    <label className="blueprint-label">Expected Behavior</label>
                     <button 
                       onClick={() => handleCopy(currentCase.expectedBehaviour, 'expected')}
                       className={`flex items-center gap-2 p-1.5 border transition-all ${copiedType === 'expected' ? 'bg-blueprint-success border-blueprint-success text-blueprint-paper' : 'border-blueprint-line-solid/30 text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:border-blueprint-line-solid'}`}
                     >
                       {copiedType === 'expected' ? <CheckCircle2 size={12} /> : <Copy size={12} />}
-                      <span className="text-[9px] font-mono font-bold uppercase tracking-tighter">{copiedType === 'expected' ? 'COMMITTED' : 'COPY'}</span>
+                      <span className="text-[9px] font-mono font-bold uppercase tracking-tighter">{copiedType === 'expected' ? 'Copied' : 'Copy'}</span>
                     </button>
                   </div>
                   <div 
@@ -298,28 +298,28 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <label className="blueprint-label">ACTUAL_NEURAL_RESPONSE</label>
+                  <label className="blueprint-label">Actual Response</label>
                   <textarea 
                     value={localResponse}
                     onChange={(e) => setLocalResponse(e.target.value)}
                     className="blueprint-input w-full h-40 text-[11px] placeholder:opacity-20 leading-relaxed resize-none p-5"
-                    placeholder="WAITING FOR TARGET OUTPUT LOGS..."
+                    placeholder="Enter the AI response here..."
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div className="space-y-4">
-                  <label className="blueprint-label">EVIDENCE_LOGS / AUDITOR_NOTES</label>
+                  <label className="blueprint-label">Observation Notes</label>
                   <textarea 
                     value={localNotes}
                     onChange={(e) => setLocalNotes(e.target.value)}
                     className="blueprint-input w-full h-32 text-[11px] placeholder:opacity-20 leading-relaxed resize-none p-5"
-                    placeholder="ENTER ANOMALIES, OBSERVATIONS, OR RISK MAPPINGS..."
+                    placeholder="Enter any notes or observations..."
                   />
                 </div>
                 <div className="space-y-4">
-                  <label className="blueprint-label">TAG_CLASSIFICATIONS</label>
+                  <label className="blueprint-label">Tags & Details</label>
                   <div className="blueprint-panel p-5 min-h-[128px] space-y-5 bg-blueprint-paper/20">
                     <div className="flex flex-wrap gap-2">
                       {localTags.map(tag => (
@@ -328,7 +328,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                           <button onClick={() => removeTag(tag)} className="hover:text-blueprint-error ml-1 transition-colors"><X size={10} /></button>
                         </span>
                       ))}
-                      {localTags.length === 0 && <span className="font-mono text-[9px] text-blueprint-white/20 italic tracking-widest uppercase">NO_TAGS_INITIALIZED</span>}
+                      {localTags.length === 0 && <span className="font-mono text-[9px] text-blueprint-white/20 italic tracking-widest uppercase">No tags assigned</span>}
                     </div>
                     <div className="flex gap-4 border-t border-blueprint-line pt-4">
                       <input 
@@ -336,7 +336,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                         value={newTag}
                         onChange={(e) => setNewTag(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && addTag()}
-                        placeholder="ADD_METADATA..."
+                        placeholder="Add tag..."
                         className="flex-1 bg-transparent border-none outline-none font-mono text-[10px] uppercase font-bold text-blueprint-white placeholder:opacity-20"
                       />
                       <button onClick={addTag} className="text-blueprint-line-solid hover:scale-125 transition-transform">
@@ -371,7 +371,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                       }
                     `}
                   >
-                    <X size={18} /> FAILED
+                    <X size={18} /> Fail
                   </button>
                 </div>
 

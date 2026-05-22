@@ -123,21 +123,21 @@ function AppContent() {
             isSidebarPinned={isSidebarPinned}
             onClick={() => { setCurrentView('guide'); resetViews(); }} 
             icon={<BookOpen size={20} />} 
-            label="SCHEMATICS" 
+            label="GUIDE" 
           />
           <NavButton 
             active={currentView === 'library'} 
             isSidebarPinned={isSidebarPinned}
             onClick={() => { setCurrentView('library'); resetViews(); }} 
             icon={<Library size={20} />} 
-            label="VECTORS" 
+            label="LIBRARY" 
           />
           <NavButton 
             active={currentView === 'missions' && !activePackId} 
             isSidebarPinned={isSidebarPinned}
             onClick={() => { setCurrentView('missions'); resetViews(); }} 
             icon={<ClipboardList size={20} />} 
-            label="MISSIONS" 
+            label="ASSESSMENTS" 
           />
         </nav>
 
@@ -153,7 +153,7 @@ function AppContent() {
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             </div>
             <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
-              {theme === 'dark' ? 'LIGHT_MODE' : 'DARK_MODE'}
+              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
             </span>
           </button>
         </div>
