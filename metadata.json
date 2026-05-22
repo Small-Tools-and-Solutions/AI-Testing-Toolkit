@@ -1,0 +1,6 @@
+{
+  "name": "AI Audit Suite",
+  "description": "Professional toolkit for AI agent auditing, RAG testing, and red teaming with automated scenario generation and OWASP risk mapping.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
