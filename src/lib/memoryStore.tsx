@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from 'react';
 import { AISystem, TestPack, TestCase } from '../types';
 
 const STORAGE_KEY = 'cipherwatch_audit_registry_v1';
@@ -30,95 +30,77 @@ interface MemoryStoreContextType {
 const MemoryStoreContext = createContext<MemoryStoreContextType | undefined>(undefined);
 
 export function MemoryStoreProvider({ children }: { children: ReactNode }) {
-  // Initialize from localStorage if available
-  const [systems, setSystems] = useState<AISystem[]>(() => {
+  const [data, setData] = useState<StoredData>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as StoredData;
-        return parsed.systems || [];
+        return {
+          systems: parsed.systems || [],
+          testPacks: parsed.testPacks || [],
+          testCases: parsed.testCases || {}
+        };
       } catch (e) {
-        console.error('Failed to parse stored systems:', e);
+        console.error('Failed to parse stored data:', e);
       }
     }
-    return [];
-  });
-
-  const [testPacks, setTestPacks] = useState<TestPack[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved) as StoredData;
-        return parsed.testPacks || [];
-      } catch (e) {
-        console.error('Failed to parse stored packs:', e);
-      }
-    }
-    return [];
-  });
-
-  const [testCases, setTestCases] = useState<Record<string, TestCase[]>>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved) as StoredData;
-        return parsed.testCases || {};
-      } catch (e) {
-        console.error('Failed to parse stored cases:', e);
-      }
-    }
-    return {};
+    return { systems: [], testPacks: [], testCases: {} };
   });
 
   // Sync to localStorage on change
   useEffect(() => {
-    const data: StoredData = {
-      systems,
-      testPacks,
-      testCases
-    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [systems, testPacks, testCases]);
+  }, [data]);
 
-  const updateSystem = (system: AISystem) => {
-    setSystems(prev => {
-      const exists = prev.find(s => s.id === system.id);
-      if (exists) return prev.map(s => s.id === system.id ? system : s);
-      return [...prev, system];
+  const updateSystem = useCallback((system: AISystem) => {
+    setData(prev => ({
+      ...prev,
+      systems: prev.systems.find(s => s.id === system.id)
+        ? prev.systems.map(s => s.id === system.id ? system : s)
+        : [...prev.systems, system]
+    }));
+  }, []);
+
+  const updatePack = useCallback((pack: TestPack) => {
+    setData(prev => ({
+      ...prev,
+      testPacks: prev.testPacks.find(p => p.id === pack.id)
+        ? prev.testPacks.map(p => p.id === pack.id ? pack : p)
+        : [...prev.testPacks, pack]
+    }));
+  }, []);
+
+  const updateCases = useCallback((packId: string, cases: TestCase[]) => {
+    setData(prev => ({
+      ...prev,
+      testCases: { ...prev.testCases, [packId]: cases }
+    }));
+  }, []);
+
+  const deletePack = useCallback((packId: string) => {
+    setData(prev => {
+      const pack = prev.testPacks.find(p => p.id === packId);
+      const newPacks = prev.testPacks.filter(p => p.id !== packId);
+      const newSystems = pack ? prev.systems.filter(s => s.id !== pack.systemId) : prev.systems;
+      const newCases = { ...prev.testCases };
+      delete newCases[packId];
+      
+      return {
+        systems: newSystems,
+        testPacks: newPacks,
+        testCases: newCases
+      };
     });
-  };
+  }, []);
 
-  const updatePack = (pack: TestPack) => {
-    setTestPacks(prev => {
-      const exists = prev.find(p => p.id === pack.id);
-      if (exists) return prev.map(p => p.id === pack.id ? pack : p);
-      return [...prev, pack];
-    });
-  };
+  const getSystem = useCallback((id: string) => data.systems.find(s => s.id === id), [data.systems]);
+  const getPack = useCallback((id: string) => data.testPacks.find(p => p.id === id), [data.testPacks]);
+  const getCases = useCallback((packId: string) => data.testCases[packId] || [], [data.testCases]);
 
-  const updateCases = (packId: string, cases: TestCase[]) => {
-    setTestCases(prev => ({ ...prev, [packId]: cases }));
-  };
-
-  const deletePack = (packId: string) => {
-    const pack = testPacks.find(p => p.id === packId);
-    setTestPacks(prev => prev.filter(p => p.id !== packId));
-    if (pack) {
-      setSystems(prev => prev.filter(s => s.id !== pack.systemId));
-    }
-    const newCases = { ...testCases };
-    delete newCases[packId];
-    setTestCases(newCases);
-  };
-
-  const getSystem = (id: string) => systems.find(s => s.id === id);
-  const getPack = (id: string) => testPacks.find(p => p.id === id);
-  const getCases = (packId: string) => testCases[packId] || [];
-
-  const value = {
-    systems,
-    testPacks,
-    testCases,
+  const value = useMemo(() => ({
+    systems: data.systems,
+    testPacks: data.testPacks,
+    testCases: data.testCases,
     updateSystem,
     updatePack,
     updateCases,
@@ -126,7 +108,7 @@ export function MemoryStoreProvider({ children }: { children: ReactNode }) {
     getSystem,
     getPack,
     getCases
-  };
+  }), [data.systems, data.testPacks, data.testCases, updateSystem, updatePack, updateCases, deletePack, getSystem, getPack, getCases]);
 
   return (
     <MemoryStoreContext.Provider value={value}>

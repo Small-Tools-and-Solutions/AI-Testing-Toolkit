@@ -126,7 +126,9 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
   };
 
   const handleAbort = async () => {
-    if (system?.name === 'NEW AI SYSTEM') {
+    const cases = getCases(id);
+    // Only auto-delete if it's a default-named mission with NO test cases (never committed/probed)
+    if (system?.name === 'NEW AI SYSTEM' && cases.length === 0) {
       deletePack(id);
     }
     onClose();
