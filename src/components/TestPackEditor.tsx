@@ -244,7 +244,6 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
         {/* Left Column: Target Profile */}
         <div className="lg:col-span-2 space-y-10">
           <section className="blueprint-panel p-8 relative">
-            <div className="absolute top-2 right-4 technical-marker">PROFILE_ALPHA</div>
             <h3 className="text-lg font-bold uppercase mb-8 flex items-center gap-3 text-blueprint-white tracking-[0.2em] border-b border-blueprint-line pb-4">
               <AlertCircle size={18} className="text-blueprint-line-solid" /> System Profile
             </h3>
@@ -263,7 +262,6 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
           </section>
 
           <section className="blueprint-panel p-8 relative">
-            <div className="absolute top-2 right-4 technical-marker">GUIDELINES_02</div>
             <h3 className="text-lg font-bold uppercase mb-8 flex items-center gap-3 text-blueprint-white tracking-[0.2em] border-b border-blueprint-line pb-4">
               <ShieldCheck size={18} className="text-blueprint-accent" /> Assessment Details
             </h3>
@@ -291,8 +289,6 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
         {/* Right Column: AI Recon Engine */}
         <div className="space-y-8">
           <div className="blueprint-panel p-8 bg-blueprint-line-solid/[0.03] border-blueprint-line-solid/30 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-2 font-mono text-[8px] text-blueprint-line-solid/30 tracking-[0.3em] font-bold">RECON_SUBSYSTEM_ACTIVE</div>
-            
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold uppercase flex items-center gap-3 text-blueprint-white tracking-[0.1em] sm:tracking-[0.15em] leading-tight">
                 <Wand2 size={24} className="text-blueprint-line-solid shrink-0 animate-pulse" /> Security Test Generator

@@ -115,19 +115,19 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 font-mono text-[10px] uppercase tracking-widest text-blueprint-white/50">
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px] opacity-40">Assessment ID</p>
+                <p className="blueprint-label !text-[8px]">Assessment ID</p>
                 <p className="text-blueprint-white font-bold">#{pack.id.substring(0, 12).toUpperCase()}</p>
               </div>
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px] opacity-40">Target System</p>
+                <p className="blueprint-label !text-[8px]">Target System</p>
                 <p className="text-blueprint-white font-bold">{system.name}</p>
               </div>
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px] opacity-40">Completion Timestamp</p>
+                <p className="blueprint-label !text-[8px]">Completion Timestamp</p>
                 <p className="text-blueprint-white font-bold">{getFriendlyDate(new Date(pack.updatedAt))} [{new Date(pack.updatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}]</p>
               </div>
               <div className="space-y-1">
-                <p className="blueprint-label !text-[8px] opacity-40">Security Assessment</p>
+                <p className="blueprint-label !text-[8px]">Security Assessment</p>
                 <div className={`mt-1 px-3 py-1 border font-bold text-[11px] inline-flex items-center gap-2 ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
                   <div className={`w-1.5 h-1.5 rounded-full ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
                   {pack.status === 'RED' ? 'System Vulnerable' : pack.status === 'AMBER' ? 'Assessment Incomplete' : 'Verified Secure'}
@@ -160,14 +160,14 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 font-mono text-[10px] leading-loose uppercase tracking-wider">
             <div className="space-y-6">
-               <div className="space-y-1"><p className="blueprint-label !text-[8px] opacity-40">Primary Purpose</p><p className="text-blueprint-white/80">{system.purpose || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[8px] opacity-40">Target Users</p><p className="text-blueprint-white/80">{system.targetUsers || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[8px] opacity-40">Sensitive Data Context</p><p className="text-blueprint-white/80">{system.sensitiveData || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Primary Purpose</p><p className="text-blueprint-white/80">{system.purpose || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Target Users</p><p className="text-blueprint-white/80">{system.targetUsers || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Sensitive Data Context</p><p className="text-blueprint-white/80">{system.sensitiveData || 'Not Defined'}</p></div>
             </div>
             <div className="space-y-6">
-               <div className="space-y-1"><p className="blueprint-label !text-[8px] opacity-40">Refusal Guidelines</p><p className="text-blueprint-white/80">{system.mustRefuse || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[8px] opacity-40">Known Risk Factors</p><p className="text-blueprint-white/80">{system.knownRisks || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[8px] opacity-40">Vertical Domain</p><p className="text-blueprint-white/80">{system.industry || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Refusal Guidelines</p><p className="text-blueprint-white/80">{system.mustRefuse || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Known Risk Factors</p><p className="text-blueprint-white/80">{system.knownRisks || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label !text-[8px]">Vertical Domain</p><p className="text-blueprint-white/80">{system.industry || 'Not Defined'}</p></div>
             </div>
           </div>
         </section>
@@ -176,7 +176,7 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
         <section className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4 flex-1">
-              <h3 className="text-lg font-bold uppercase tracking-[0.2em] text-blueprint-white">Security Test Logs</h3>
+              <h3 className="text-lg font-bold uppercase tracking-[0.2em] text-blueprint-white">Collection</h3>
               <div className="flex-1 h-px bg-blueprint-line" />
             </div>
             

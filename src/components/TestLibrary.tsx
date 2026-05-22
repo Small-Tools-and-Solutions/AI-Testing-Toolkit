@@ -225,7 +225,7 @@ function CopyCell({ prompt, hint }: { prompt: string; hint?: string }) {
 
       {copied && (
         <div className="absolute top-2 right-14 bg-blueprint-line-solid text-blueprint-paper text-[8px] px-2 py-1 font-mono font-bold uppercase animate-in fade-in slide-in-from-right-1">
-          SC_CLIPBOARD_MODIFIED
+          Copied to Clipboard
         </div>
       )}
     </div>

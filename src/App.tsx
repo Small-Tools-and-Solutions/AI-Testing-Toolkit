@@ -103,7 +103,6 @@ function AppContent() {
             <ShieldCheck className="text-blueprint-line-solid shrink-0" size={28} />
             <div className={`flex flex-col transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
               <span className="font-bold text-lg uppercase tracking-widest text-blueprint-white">Audit Suite</span>
-              <span className="technical-marker contents">AUDIT_CORE_v1.4</span>
             </div>
           </div>
           <button 
@@ -161,10 +160,6 @@ function AppContent() {
 
       {/* Main Schematic Area */}
       <main className="flex-1 p-6 lg:p-12 overflow-y-auto relative">
-        {/* Decorative corner markers */}
-        <div className="absolute top-4 right-4 technical-marker">SEC_ZONE_01</div>
-        <div className="absolute bottom-4 left-4 technical-marker">UI_LAYER_ALPHA</div>
-
         <div className="max-w-6xl mx-auto space-y-10">
           {isEditing && activePackId && (
             <TestPackEditor 
@@ -208,7 +203,7 @@ function NavButton({ active, onClick, icon, label, isSidebarPinned }: { active: 
         w-full p-4 flex items-center gap-6 transition-all relative group/btn overflow-hidden
         ${active 
           ? 'text-blueprint-line-solid bg-blueprint-line-solid/5' 
-          : 'text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:bg-blueprint-line-solid/5'
+          : 'text-blueprint-line-solid text-opacity-60 hover:text-opacity-100 hover:bg-blueprint-line-solid/5'
         }
       `}
     >
@@ -218,7 +213,7 @@ function NavButton({ active, onClick, icon, label, isSidebarPinned }: { active: 
       <div className={`${active ? 'scale-110' : 'scale-100'} transition-transform shrink-0`}>
         {icon}
       </div>
-      <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
+      <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
         {label}
       </span>
       

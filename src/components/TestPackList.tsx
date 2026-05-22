@@ -121,7 +121,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
       <div className="blueprint-panel border-blueprint-line-solid/20 overflow-hidden">
         <table className="w-full text-left font-mono text-[10px] border-collapse bg-blueprint-paper/30">
           <thead>
-            <tr className="bg-blueprint-line-solid/5 text-blueprint-line-solid uppercase tracking-[0.2em] border-b border-blueprint-line">
+            <tr className="bg-blueprint-line-solid/5 text-blueprint-line-solid font-bold uppercase tracking-[0.2em] border-b border-blueprint-line">
               <th className="px-6 py-4 w-12 border-r border-blueprint-line">
                 <div className="flex items-center justify-center">
                   <input 
@@ -132,12 +132,12 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                   />
                 </div>
               </th>
-              <th className="px-6 py-4 border-r border-blueprint-line font-bold w-16">No.</th>
-              <th className="px-6 py-4 border-r border-blueprint-line font-bold">Status</th>
-              <th className="px-6 py-4 border-r border-blueprint-line font-bold">Assessment ID</th>
-              <th className="px-6 py-4 border-r border-blueprint-line font-bold">Created At</th>
-              <th className="px-6 py-4 border-r border-blueprint-line font-bold">System Name</th>
-              <th className="px-6 py-4 font-bold flex-1">Actions</th>
+              <th className="px-6 py-4 border-r border-blueprint-line w-16">No.</th>
+              <th className="px-6 py-4 border-r border-blueprint-line">Security Assessment</th>
+              <th className="px-6 py-4 border-r border-blueprint-line">Assessment ID</th>
+              <th className="px-6 py-4 border-r border-blueprint-line">Completion Timestamp</th>
+              <th className="px-6 py-4 border-r border-blueprint-line">Target System</th>
+              <th className="px-6 py-4 flex-1">Actions</th>
               <th className="px-6 py-4 w-12"></th>
             </tr>
           </thead>
@@ -154,7 +154,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                     />
                   </div>
                 </td>
-                <td className="px-6 py-5 border-r border-blueprint-line text-blueprint-white/60 whitespace-nowrap">
+                <td className="px-6 py-5 border-r border-blueprint-line text-blueprint-white whitespace-nowrap">
                   {(index + 1).toString().padStart(4, '0')}
                 </td>
                 <td className="px-6 py-5 border-r border-blueprint-line">
@@ -173,7 +173,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                 <td className="px-6 py-5 border-r border-blueprint-line font-bold text-blueprint-white tracking-widest">
                   #{pack.id.substring(0, 8).toUpperCase()}
                 </td>
-                <td className="px-6 py-5 border-r border-blueprint-line text-blueprint-white/80 tracking-tighter uppercase whitespace-nowrap">
+                <td className="px-6 py-5 border-r border-blueprint-line text-blueprint-white tracking-widest uppercase whitespace-nowrap">
                   {getFriendlyDate(new Date(pack.createdAt))}
                 </td>
                 <td className="px-6 py-5 border-r border-blueprint-line font-mono text-blueprint-accent hover:text-blueprint-accent/80 transition-colors italic tracking-tighter bg-blueprint-line-solid/[0.02]">
