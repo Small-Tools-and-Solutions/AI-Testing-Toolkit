@@ -98,64 +98,65 @@ function AppContent() {
         w-full lg:bg-blueprint-paper border-b border-blueprint-line lg:border-b-0 lg:border-r border-blueprint-line flex flex-col gap-10 z-20 group transition-all duration-300 ease-in-out whitespace-nowrap overflow-hidden
         ${isSidebarPinned ? 'lg:w-64' : 'lg:w-20 lg:hover:w-64'}
       `}>
-        <div className="flex items-center justify-between p-6 pb-0 overflow-hidden">
-          <div className="flex items-center gap-4">
-            <ShieldCheck className="text-blueprint-line-solid shrink-0" size={28} />
-            <div className={`flex flex-col transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-              <span className="font-bold text-lg uppercase tracking-widest text-blueprint-white">Audit Suite</span>
+        <div className="flex flex-col gap-6 pt-6 pb-0 overflow-hidden">
+          <div className="flex items-center justify-between px-7">
+            <div className="flex items-center gap-6">
+              <ShieldCheck className="text-blueprint-line-solid shrink-0" size={24} />
+              <div className={`flex flex-col transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                <span className="font-bold text-lg uppercase tracking-widest text-blueprint-white">Audit Suite</span>
+              </div>
             </div>
+            <button 
+              onClick={() => setIsSidebarPinned(!isSidebarPinned)}
+              className={`
+                hidden lg:flex p-1.5 border border-blueprint-line-solid/20 rounded-xs transition-all
+                ${isSidebarPinned ? 'bg-blueprint-line-solid text-blueprint-paper border-blueprint-line-solid' : 'text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:border-blueprint-line-solid/60 opacity-0 group-hover:opacity-100'}
+              `}
+            >
+              {isSidebarPinned ? <Pin size={12} /> : <PinOff size={12} />}
+            </button>
           </div>
+
           <button 
-            onClick={() => setIsSidebarPinned(!isSidebarPinned)}
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className={`
-              hidden lg:flex p-1.5 border border-blueprint-line-solid/20 rounded-xs transition-all
-              ${isSidebarPinned ? 'bg-blueprint-line-solid text-blueprint-paper border-blueprint-line-solid' : 'text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:border-blueprint-line-solid/60 opacity-0 group-hover:opacity-100'}
+              w-full py-4 px-7 flex items-center gap-6 border-y border-blueprint-line-solid/10 bg-blueprint-line-solid/[0.02] hover:bg-blueprint-line-solid/5 transition-all group/theme
             `}
           >
-            {isSidebarPinned ? <Pin size={12} /> : <PinOff size={12} />}
+            <div className="shrink-0 text-blueprint-line-solid">
+              {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+            </div>
+            <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
+              {theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
+            </span>
           </button>
         </div>
 
-        <nav className="flex flex-col gap-1 px-4">
+        <nav className="flex flex-col gap-1 mt-4">
           <NavButton 
             active={currentView === 'guide'} 
             isSidebarPinned={isSidebarPinned}
             onClick={() => { setCurrentView('guide'); resetViews(); }} 
-            icon={<BookOpen size={20} />} 
+            icon={<BookOpen size={24} />} 
             label="GUIDE" 
           />
           <NavButton 
             active={currentView === 'library'} 
             isSidebarPinned={isSidebarPinned}
             onClick={() => { setCurrentView('library'); resetViews(); }} 
-            icon={<Library size={20} />} 
+            icon={<Library size={24} />} 
             label="LIBRARY" 
           />
           <NavButton 
             active={currentView === 'missions' && !activePackId} 
             isSidebarPinned={isSidebarPinned}
             onClick={() => { setCurrentView('missions'); resetViews(); }} 
-            icon={<ClipboardList size={20} />} 
+            icon={<ClipboardList size={24} />} 
             label="ASSESSMENTS" 
           />
         </nav>
 
-        <div className="mt-auto px-4 pb-10">
-          <button 
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className={`
-              w-full p-4 flex items-center gap-6 transition-all relative group/theme transition-colors
-              text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:bg-blueprint-line-solid/5
-            `}
-          >
-            <div className="shrink-0">
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-            </div>
-            <span className={`text-xs font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
-              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            </span>
-          </button>
-        </div>
+        <div className="mt-auto pb-10" />
       </aside>
 
       {/* Main Schematic Area */}
@@ -200,25 +201,25 @@ function NavButton({ active, onClick, icon, label, isSidebarPinned }: { active: 
     <button 
       onClick={onClick}
       className={`
-        w-full p-4 flex items-center gap-6 transition-all relative group/btn overflow-hidden
+        w-full py-5 px-7 flex items-center gap-6 transition-all relative group/btn overflow-hidden
         ${active 
           ? 'text-blueprint-line-solid bg-blueprint-line-solid/5' 
-          : 'text-blueprint-line-solid text-opacity-60 hover:text-opacity-100 hover:bg-blueprint-line-solid/5'
+          : 'text-blueprint-line-solid text-opacity-80 hover:text-opacity-100 hover:bg-blueprint-line-solid/5'
         }
       `}
     >
       {active && (
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-blueprint-line-solid" />
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-blueprint-line-solid shadow-[0_0_15px_rgba(100,255,218,0.5)]" />
       )}
       <div className={`${active ? 'scale-110' : 'scale-100'} transition-transform shrink-0`}>
         {icon}
       </div>
-      <span className={`text-xs font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+      <span className={`text-[12px] font-mono font-bold tracking-[0.2em] uppercase transition-opacity duration-300 ${isSidebarPinned ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
         {label}
       </span>
       
       {active && (
-        <span className={`ml-auto animate-pulse ${isSidebarPinned ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>_</span>
+        <span className={`ml-auto animate-pulse ${isSidebarPinned ? 'opacity-100 text-blueprint-line-solid/50' : 'opacity-0 lg:group-hover:opacity-100'}`}>_</span>
       )}
     </button>
   );

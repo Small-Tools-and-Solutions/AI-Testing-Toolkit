@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TestPack, TestCase, AISystem } from '../types';
 import { Shield, Download, ChevronLeft, Printer, Filter, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, HelpCircle } from 'lucide-react';
-import { BarChart, Bar, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, ResponsiveContainer, Cell, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { getFriendlyDate } from '../lib/dateUtils';
 import { useMemoryStore } from '../lib/memoryStore';
 import { motion, AnimatePresence } from 'motion/react';
@@ -97,38 +97,38 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
       </header>
 
       {/* Schematic Report Canvas */}
-      <div className="blueprint-panel bg-blueprint-paper/40 p-12 space-y-16 border-blueprint-line-solid/20 relative overflow-hidden">
+      <div className="blueprint-panel bg-blueprint-paper/40 p-6 lg:p-10 space-y-8 border-blueprint-line-solid/20 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-32 h-32 border-l border-t border-blueprint-line-solid/10 pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-32 h-32 border-r border-b border-blueprint-line-solid/10 pointer-events-none" />
 
         {/* Exec Summary Section */}
-        <section className="flex flex-col lg:flex-row justify-between gap-16">
-          <div className="flex-1 space-y-8">
-            <div className="space-y-3">
+        <section className="flex flex-col lg:flex-row justify-between gap-8 lg:gap-12">
+          <div className="flex-1 space-y-6">
+            <div className="space-y-2">
               <div className="flex items-center gap-4">
-                <Shield size={40} className="text-blueprint-line-solid" />
-                <h1 className="text-4xl font-bold tracking-[0.15em] uppercase text-blueprint-white">Assessment Report</h1>
+                <Shield size={36} className="text-blueprint-line-solid" />
+                <h1 className="text-3xl lg:text-4xl font-bold tracking-[0.1em] uppercase text-blueprint-white">Assessment Report</h1>
               </div>
-              <div className="h-0.5 bg-blueprint-line-solid/30 w-64" />
+              <div className="h-0.5 bg-blueprint-line-solid/30 w-full max-w-md" />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 font-mono text-xs uppercase tracking-widest text-blueprint-white/50">
-              <div className="space-y-1">
-                <p className="blueprint-label !text-[10px]">Assessment ID</p>
-                <p className="text-blueprint-white font-bold">#{pack.id.substring(0, 12).toUpperCase()}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 font-mono text-xs uppercase tracking-widest text-blueprint-white/50">
+              <div className="space-y-0.5">
+                <p className="blueprint-label">Assessment ID</p>
+                <p className="text-blueprint-white font-bold tracking-normal">#{pack.id.substring(0, 12).toUpperCase()}</p>
               </div>
-              <div className="space-y-1">
-                <p className="blueprint-label !text-[10px]">Target System</p>
-                <p className="text-blueprint-white font-bold">{system.name}</p>
+              <div className="space-y-0.5">
+                <p className="blueprint-label">Target System</p>
+                <p className="text-blueprint-white font-bold tracking-normal truncate">{system.name}</p>
               </div>
-              <div className="space-y-1">
-                <p className="blueprint-label !text-[10px]">Completion Timestamp</p>
-                <p className="text-blueprint-white font-bold">{getFriendlyDate(new Date(pack.updatedAt))} [{new Date(pack.updatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}]</p>
+              <div className="space-y-0.5">
+                <p className="blueprint-label">Completion Timestamp</p>
+                <p className="text-blueprint-white font-bold tracking-normal text-xs">{getFriendlyDate(new Date(pack.updatedAt))} [{new Date(pack.updatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}]</p>
               </div>
-              <div className="space-y-1">
-                <p className="blueprint-label !text-[10px]">Security Assessment</p>
-                <div className={`mt-1 px-3 py-1 border font-bold text-xs inline-flex items-center gap-2 ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
+              <div className="space-y-0.5">
+                <p className="blueprint-label">Security Assessment</p>
+                <div className={`mt-0.5 px-3 py-1 border font-bold text-xs inline-flex items-center gap-2 ${pack.status === 'RED' ? 'border-blueprint-error text-blueprint-error bg-blueprint-error/5' : pack.status === 'AMBER' ? 'border-blueprint-accent text-blueprint-accent bg-blueprint-accent/5' : 'border-blueprint-success text-blueprint-success bg-blueprint-success/5'}`}>
                   <div className={`w-2 h-2 rounded-full ${pack.status === 'RED' ? 'bg-blueprint-error' : pack.status === 'AMBER' ? 'bg-blueprint-accent' : 'bg-blueprint-success'}`} />
                   {pack.status === 'RED' ? 'System Vulnerable' : pack.status === 'AMBER' ? 'Assessment Incomplete' : 'Verified Secure'}
                 </div>
@@ -136,11 +136,40 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
             </div>
           </div>
 
-          <div className="blueprint-panel p-8 flex flex-col items-center justify-center text-center bg-blueprint-line-solid/[0.03] border-blueprint-line-solid/10 min-w-[300px]">
-             <div className="h-32 w-full">
+          <div className="blueprint-panel p-6 flex flex-col items-center justify-center bg-blueprint-line-solid/[0.03] border-blueprint-line-solid/10 min-w-[340px] lg:min-w-[400px]">
+             <div className="h-44 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} barGap={8}>
-                    <Bar dataKey="value" radius={[2, 2, 0, 0]}>
+                  <BarChart data={chartData} barGap={8} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--blueprint-line-solid)" strokeOpacity={0.6} />
+                    <XAxis 
+                      dataKey="name" 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: 'var(--blueprint-line-solid)', fontSize: 12, fontWeight: 'bold' }}
+                      dy={10}
+                    />
+                    <YAxis 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: 'var(--blueprint-line-solid)', fontSize: 12, fontWeight: 'bold' }}
+                      allowDecimals={false}
+                    />
+                    <Tooltip 
+                      cursor={{ fill: 'var(--blueprint-line-solid)', fillOpacity: 0.1 }}
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-blueprint-paper border border-blueprint-line-solid px-3 py-2 font-mono shadow-2xl">
+                              <p className="text-[10px] font-bold text-blueprint-line-solid mb-1 tracking-widest">{data.name}</p>
+                              <p className="text-xl font-bold text-blueprint-white">{data.value} <span className="text-[10px] opacity-40 font-normal">Vectors</span></p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="value" radius={[2, 2, 0, 0]} barSize={40}>
                       {chartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.6} stroke={entry.color} strokeWidth={1} />
                       ))}
@@ -148,7 +177,7 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                   </BarChart>
                 </ResponsiveContainer>
              </div>
-             <p className="blueprint-label !text-xs mt-6 tracking-[0.3em]">VECTOR_OUTCOME_DISTRIBUTION</p>
+             <p className="blueprint-label text-xs mt-4 tracking-[0.3em] font-black">Vector Outcome Distribution</p>
           </div>
         </section>
 
@@ -158,16 +187,18 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
             <h3 className="text-lg font-bold uppercase tracking-[0.2em] text-blueprint-white">System Profile</h3>
             <div className="flex-1 h-px bg-blueprint-line" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 font-mono text-xs leading-loose uppercase tracking-wider">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 font-mono text-xs leading-loose uppercase tracking-wider">
             <div className="space-y-6">
-               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Primary Purpose</p><p className="text-blueprint-white/80">{system.purpose || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Target Users</p><p className="text-blueprint-white/80">{system.targetUsers || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Sensitive Data Context</p><p className="text-blueprint-white/80">{system.sensitiveData || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label">Primary Purpose</p><p className="text-blueprint-white/80">{system.purpose || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label">Target Users</p><p className="text-blueprint-white/80">{system.targetUsers || 'Not Defined'}</p></div>
             </div>
             <div className="space-y-6">
-               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Refusal Guidelines</p><p className="text-blueprint-white/80">{system.mustRefuse || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Known Risk Factors</p><p className="text-blueprint-white/80">{system.knownRisks || 'Not Defined'}</p></div>
-               <div className="space-y-1"><p className="blueprint-label !text-[10px]">Vertical Domain</p><p className="text-blueprint-white/80">{system.industry || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label">Sensitive Data Context</p><p className="text-blueprint-white/80">{system.sensitiveData || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label">Refusal Guidelines</p><p className="text-blueprint-white/80">{system.mustRefuse || 'Not Defined'}</p></div>
+            </div>
+            <div className="space-y-6">
+               <div className="space-y-1"><p className="blueprint-label">Known Risk Factors</p><p className="text-blueprint-white/80">{system.knownRisks || 'Not Defined'}</p></div>
+               <div className="space-y-1"><p className="blueprint-label">Vertical Domain</p><p className="text-blueprint-white/80">{system.industry || 'Not Defined'}</p></div>
             </div>
           </div>
         </section>
@@ -202,9 +233,9 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
           </div>
 
           <div className="blueprint-panel border-blueprint-line-solid/10 overflow-x-auto scrollbar-thin scrollbar-thumb-blueprint-line-solid/10">
-            <table className="w-full text-left font-mono text-[11px] border-collapse uppercase tracking-widest bg-blueprint-paper/20 min-w-[800px]">
+            <table className="w-full text-left font-mono text-xs border-collapse uppercase tracking-[0.05em] bg-blueprint-paper/20 min-w-[800px]">
               <thead>
-                <tr className="bg-blueprint-line-solid/5 border-b border-blueprint-line text-blueprint-line-solid/60">
+                <tr className="bg-blueprint-line-solid/5 border-b border-blueprint-line text-blueprint-line-solid font-bold">
                   <th className="px-4 py-3 w-10"></th>
                   <th className="px-4 py-3">Result</th>
                   <th className="px-4 py-3">Test ID</th>
@@ -297,13 +328,13 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
           </div>
         </section>
 
-        <footer className="pt-16 border-t border-blueprint-line flex flex-col items-center gap-4 opacity-30 font-mono text-[9px] tracking-[0.5em] uppercase text-blueprint-white/60">
-           <div className="flex items-center gap-10">
-             <span>Security Verified</span>
-             <span>Framework v4.2.1 Stable</span>
-             <span>Log #{pack.id.substring(0, 4).toUpperCase()}</span>
+        <footer className="pt-16 border-t border-blueprint-line flex flex-col items-center gap-4 font-mono text-[11px] tracking-[0.5em] uppercase text-blueprint-line-solid">
+           <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-14">
+             <span className="font-bold">Security Verified</span>
+             <span className="font-bold">Framework v4.2.1 Stable</span>
+             <span className="font-bold">Log #{pack.id.substring(0, 4).toUpperCase()}</span>
            </div>
-           <p className="tracking-widest opacity-50">© 2026 CipherWatch Security Framework</p>
+           <p className="tracking-widest font-black opacity-80">© 2026 CipherWatch Security Framework</p>
         </footer>
       </div>
     </div>
