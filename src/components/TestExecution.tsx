@@ -283,13 +283,6 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <label className="blueprint-label">Expected Behavior</label>
-                    <button 
-                      onClick={() => handleCopy(currentCase.expectedBehaviour, 'expected')}
-                      className={`flex items-center gap-2 p-1.5 border transition-all ${copiedType === 'expected' ? 'bg-blueprint-success border-blueprint-success text-blueprint-paper' : 'border-blueprint-line-solid/30 text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:border-blueprint-line-solid'}`}
-                    >
-                      {copiedType === 'expected' ? <CheckCircle2 size={12} /> : <Copy size={12} />}
-                      <span className="text-[9px] font-mono font-bold uppercase tracking-tighter">{copiedType === 'expected' ? 'Copied' : 'Copy'}</span>
-                    </button>
                   </div>
                   <div 
                     onClick={() => handleCopy(currentCase.expectedBehaviour, 'expected')}
