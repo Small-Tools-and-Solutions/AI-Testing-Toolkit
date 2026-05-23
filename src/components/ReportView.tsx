@@ -297,13 +297,13 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-mono text-[10px] uppercase tracking-widest">
                                        <div className="space-y-2">
                                           <p className="blueprint-label !text-[8px] opacity-30">Expected Behavior</p>
-                                          <div className="p-4 bg-blueprint-paper/40 border border-blueprint-line/20 text-blueprint-white/60 lowercase italic leading-relaxed">
+                                          <div className="p-4 bg-blueprint-paper/40 border border-blueprint-line/20 text-blueprint-white text-sm lowercase italic leading-relaxed">
                                             {c.expectedBehaviour}
                                           </div>
                                        </div>
                                        <div className="space-y-2">
                                           <p className="blueprint-label !text-[8px] opacity-30">Actual Response</p>
-                                          <div className={`p-4 bg-blueprint-paper/60 border ${c.result === 'FAIL' ? 'border-blueprint-error/40 text-blueprint-error' : 'border-blueprint-line/40 text-blueprint-white/80'} font-bold lowercase leading-relaxed`}>
+                                          <div className={`p-4 bg-blueprint-paper/60 border ${c.result === 'FAIL' ? 'border-blueprint-error/40 text-blueprint-error' : 'border-blueprint-line/40 text-blueprint-white'} text-sm font-bold lowercase leading-relaxed`}>
                                             {c.actualResponse || 'No response logs recovered'}
                                           </div>
                                        </div>
