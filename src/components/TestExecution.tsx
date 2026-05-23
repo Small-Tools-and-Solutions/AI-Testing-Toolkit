@@ -286,9 +286,9 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                   </div>
                   <div 
                     onClick={() => handleCopy(currentCase.expectedBehaviour, 'expected')}
-                    className="blueprint-panel p-5 bg-blueprint-paper/40 font-mono text-[11px] leading-relaxed text-blueprint-white/60 h-40 overflow-y-auto border-blueprint-line/30 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 cursor-pointer group/expected relative hover:bg-blueprint-line-solid/[0.02] transition-colors"
+                    className="blueprint-panel p-5 bg-blueprint-paper/40 font-mono text-sm leading-relaxed text-blueprint-white h-40 overflow-y-auto border-blueprint-line/30 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 cursor-pointer group/expected relative hover:bg-blueprint-line-solid/[0.02] transition-colors"
                   >
-                    <div className="h-full border-l border-blueprint-accent/20 pr-4 pl-4 whitespace-pre-wrap group-hover/expected:text-blueprint-white transition-colors">
+                    <div className="h-full border-l border-blueprint-accent/20 pr-4 pl-4 whitespace-pre-wrap transition-colors">
                       {currentCase.expectedBehaviour}
                     </div>
                   </div>
@@ -298,7 +298,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                   <textarea 
                     value={localResponse}
                     onChange={(e) => setLocalResponse(e.target.value)}
-                    className="blueprint-input w-full h-40 text-[11px] placeholder:opacity-20 leading-relaxed resize-none p-5"
+                    className="blueprint-input w-full h-40 text-sm placeholder:opacity-20 leading-relaxed resize-none p-5"
                     placeholder="Enter the AI response here..."
                   />
                 </div>
@@ -310,7 +310,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                   <textarea 
                     value={localNotes}
                     onChange={(e) => setLocalNotes(e.target.value)}
-                    className="blueprint-input w-full h-32 text-[11px] placeholder:opacity-20 leading-relaxed resize-none p-5"
+                    className="blueprint-input w-full h-32 text-sm placeholder:opacity-20 leading-relaxed resize-none p-5"
                     placeholder="Enter any notes or observations..."
                   />
                 </div>
