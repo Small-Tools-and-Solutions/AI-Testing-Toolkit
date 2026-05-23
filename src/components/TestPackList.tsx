@@ -1,19 +1,74 @@
 import { useState } from 'react';
-import { TestPack, AISystem } from '../types';
-import { Plus, Eye, Play, Search, FileBarChart, Trash2, X, AlertTriangle } from 'lucide-react';
+import { Plus, Eye, Play, Search, FileBarChart, Trash2, X, AlertTriangle, LayoutGrid } from 'lucide-react';
 import { getFriendlyDate } from '../lib/dateUtils';
 import { useMemoryStore } from '../lib/memoryStore';
 import { motion, AnimatePresence } from 'motion/react';
+import { ASSESSMENT_TEMPLATES, AssessmentTemplate } from '../lib/templates';
+import { SECURITY_BANK } from '../lib/testLibraryData';
+import { AISystem, TestPack, TestCase } from '../types';
 
 interface TestPackListProps {
   onSelectPack: (id: string, mode?: 'edit' | 'run' | 'report') => void;
 }
 
 export default function TestPackList({ onSelectPack }: TestPackListProps) {
-  const { testPacks, updatePack, updateSystem, deletePack } = useMemoryStore();
+  const { testPacks, updatePack, updateSystem, updateCases, deletePack, getSystem } = useMemoryStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [packToDelete, setPackToDelete] = useState<string | string[] | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showGallery, setShowGallery] = useState(false);
+
+  const useTemplate = (template: AssessmentTemplate) => {
+    const systemId = crypto.randomUUID();
+    const packId = crypto.randomUUID();
+    
+    const newSystem: AISystem = {
+      id: systemId,
+      name: `${template.system.name || 'NEW SYSTEM'}`,
+      purpose: template.system.purpose || '',
+      targetUsers: template.system.targetUsers || '',
+      dataSources: template.system.dataSources || '',
+      connectedTools: template.system.connectedTools || '',
+      allowedActions: template.system.allowedActions || '',
+      mustRefuse: template.system.mustRefuse || '',
+      sensitiveData: template.system.sensitiveData || '',
+      industry: template.system.industry || '',
+      knownRisks: template.system.knownRisks || ''
+    };
+
+    const newPack: TestPack = {
+      id: packId,
+      systemId: systemId,
+      status: 'AMBER',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    // Construct initial test cases from the library bank
+    const initialCases: TestCase[] = template.initialTestIds
+      .map(tid => SECURITY_BANK.find(t => t.id === tid))
+      .filter((t): t is any => !!t)
+      .map(t => ({
+        id: crypto.randomUUID(),
+        testPackId: packId,
+        libraryId: t.id,
+        category: t.category,
+        prompt: t.prompt,
+        expectedBehaviour: t.expected,
+        actualResponse: '',
+        result: 'NOT TESTED',
+        riskArea: t.owaspArea,
+        priority: 'MEDIUM',
+        notes: '',
+        hint: t.hint,
+        tags: t.tags
+      }));
+
+    updateSystem(newSystem);
+    updatePack(newPack);
+    updateCases(packId, initialCases);
+    onSelectPack(packId, 'edit');
+  };
 
   const createNewPack = () => {
     const systemId = crypto.randomUUID();
@@ -72,7 +127,11 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
     }
   };
 
-  const filteredPacks = testPacks.filter(p => p.id.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredPacks = testPacks.filter(p => {
+    const system = getSystem(p.systemId);
+    const searchString = `${p.id} ${system?.name || ''}`.toLowerCase();
+    return searchString.includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -82,6 +141,12 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
           <p className="blueprint-label">Directory of current assessments and security reviews</p>
         </div>
         <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setShowGallery(!showGallery)}
+            className={`blueprint-button flex items-center gap-3 py-3 px-6 transition-all ${showGallery ? 'bg-blueprint-line-solid/10 border-blueprint-line-solid text-blueprint-line-solid' : 'text-blueprint-line-solid/60 border-blueprint-line-solid/20'}`}
+          >
+            <LayoutGrid size={18} /> {showGallery ? 'HIDE GALLERY' : 'TEMPLATE GALLERY'}
+          </button>
           <AnimatePresence>
             {selectedIds.length > 0 && (
               <motion.button
@@ -101,6 +166,40 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
           </button>
         </div>
       </header>
+
+      {/* Template Gallery Section */}
+      <AnimatePresence>
+        {showGallery && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6 bg-blueprint-line-solid/[0.03] border border-blueprint-line-solid/10 mb-8">
+              {ASSESSMENT_TEMPLATES.map((tmpl) => (
+                <div 
+                  key={tmpl.id} 
+                  className="blueprint-panel p-6 flex flex-col gap-4 border-blueprint-line-solid/20 bg-blueprint-paper/40 hover:border-blueprint-line-solid/40 transition-all group/card"
+                >
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold text-blueprint-line-solid uppercase tracking-[0.15em]">{tmpl.name}</h4>
+                    <p className="text-[10px] text-blueprint-white/40 uppercase tracking-tighter line-clamp-2">{tmpl.description}</p>
+                  </div>
+                  <div className="mt-auto">
+                    <button 
+                      onClick={() => useTemplate(tmpl)}
+                      className="w-full py-2 border border-blueprint-line-solid/30 text-[10px] font-bold text-blueprint-line-solid/80 uppercase tracking-widest hover:bg-blueprint-line-solid hover:text-blueprint-paper transition-all"
+                    >
+                      Use Template
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Search Bar */}
       <div className="relative group">
@@ -171,13 +270,13 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                   </div>
                 </td>
                 <td className="px-6 py-5 border-r border-blueprint-line font-bold text-blueprint-white tracking-widest">
-                  #{pack.id.substring(0, 8).toUpperCase()}
+                  #{pack.id.substring(0, 12).toUpperCase()}
                 </td>
                 <td className="px-6 py-5 border-r border-blueprint-line text-blueprint-white tracking-widest uppercase whitespace-nowrap">
                   {getFriendlyDate(new Date(pack.createdAt))}
                 </td>
                 <td className="px-6 py-5 border-r border-blueprint-line font-mono text-blueprint-accent hover:text-blueprint-accent/80 transition-colors italic tracking-tighter bg-blueprint-line-solid/[0.02]">
-                   {pack.systemId.substring(0, 8).toUpperCase()}
+                   {getSystem(pack.systemId)?.name || 'UNKNOWN SYSTEM'}
                 </td>
                 <td className="px-6 py-5">
                   <div className="flex items-center gap-3">
@@ -252,7 +351,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                   <p className="font-mono text-xs text-blueprint-white/50 leading-relaxed uppercase tracking-widest">
                     {Array.isArray(packToDelete) 
                       ? `You are about to permanently delete [ ${packToDelete.length} ] assessments. This action is irreversible.`
-                      : <>You are about to permanently delete the assessment <span className="text-blueprint-error">#{packToDelete.substring(0, 8).toUpperCase()}</span>. This action is irreversible.</>
+                      : <>You are about to permanently delete the assessment <span className="text-blueprint-error">#{packToDelete.substring(0, 12).toUpperCase()}</span>. This action is irreversible.</>
                     }
                     {' '}All associated reports and test logs will be permanently removed.
                   </p>

@@ -24,6 +24,10 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
   const [generating, setGenerating] = useState(false);
   const [generatedTests, setGeneratedTests] = useState<any[]>([]);
 
+  const [hasSavedThisSession, setHasSavedThisSession] = useState(false);
+  const [showTemplateConfirm, setShowTemplateConfirm] = useState(false);
+  const [pendingTemplate, setPendingTemplate] = useState<typeof INDUSTRY_TEMPLATES[0] | null>(null);
+
   useEffect(() => {
     const p = getPack(id);
     if (p) {
@@ -37,6 +41,58 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
   const handleSystemChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!system) return;
     setSystem({ ...system, [e.target.name]: e.target.value });
+  };
+
+  const INDUSTRY_TEMPLATES = [
+    {
+      name: 'Customer Support',
+      purpose: 'Provide 24/7 automated customer support, handling queries related to orders, shipping, and product information.',
+      sensitiveData: 'Customer names, email addresses, order IDs, shipping addresses, partially masked payment info.'
+    },
+    {
+      name: 'Internal KB RAG',
+      purpose: 'Enable employees to query internal company documentation, technical specifications, and HR policies via a RAG interface.',
+      sensitiveData: 'Proprietary technical data, internal project names, employee information, non-public company strategy document snippets.'
+    },
+    {
+      name: 'Financial Analysis',
+      purpose: 'Analyze market data and user-provided financial statements to provide investment insights and risk assessments.',
+      sensitiveData: 'User portfolio details, investment amounts, tax identification numbers, confidential transaction history.'
+    },
+    {
+      name: 'Healthcare Assist',
+      purpose: 'Assist healthcare providers by summarizing patient records and providing information on drug interactions and treatment protocols.',
+      sensitiveData: 'Protected Health Information (PHI), patient IDs, medical history, clinical notes, treatment plans.'
+    },
+    {
+      name: 'Human Resources',
+      purpose: 'Automate initial candidate screening, job description generation, and handling employee policy inquiries.',
+      sensitiveData: 'Candidate resumes, PII (phone, address), employee performance reviews, salary data, internal complaints.'
+    }
+  ];
+
+  const applyTemplate = (template: typeof INDUSTRY_TEMPLATES[0]) => {
+    if (!system) return;
+    
+    // If user has already saved this session, don't warn
+    if (hasSavedThisSession) {
+      executeTemplate(template);
+      return;
+    }
+
+    setPendingTemplate(template);
+    setShowTemplateConfirm(true);
+  };
+
+  const executeTemplate = (template: typeof INDUSTRY_TEMPLATES[0]) => {
+    if (!system) return;
+    setSystem({
+      ...system,
+      purpose: template.purpose,
+      sensitiveData: template.sensitiveData
+    });
+    setShowTemplateConfirm(false);
+    setPendingTemplate(null);
   };
 
   const updateCaseCounts = (packId: string) => {
@@ -58,6 +114,9 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
     if (!system || !pack) return;
     setSaving(true);
     updateSystem(system);
+    
+    // Once saved, we silent the template warning for this session
+    setHasSavedThisSession(true);
     
     // Auto-init baseline if empty
     const cases = getCases(id);
@@ -81,6 +140,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
     
     // Save system changes
     updateSystem(system);
+    setHasSavedThisSession(true);
     
     // Check if we already have test cases. If not, add baseline tests at minimum.
     const cases = getCases(id);
@@ -240,13 +300,70 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
         )}
       </AnimatePresence>
 
+      {/* Template Confirmation Modal */}
+      <AnimatePresence>
+        {showTemplateConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-blueprint-paper/80 backdrop-blur-sm">
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="blueprint-panel p-8 bg-blueprint-paper border-blueprint-line-solid/40 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+            >
+              <div className="flex items-center gap-4 text-blueprint-line-solid mb-6">
+                <AlertCircle size={28} />
+                <h2 className="text-xl font-bold uppercase tracking-widest leading-none">Template Override</h2>
+              </div>
+              
+              <div className="space-y-4 mb-8">
+                <p className="font-mono text-sm text-blueprint-white/80 leading-relaxed uppercase tracking-widest">
+                  Hang on, you already had some settings. Are you sure you want to use or change the profile to <span className="text-blueprint-line-solid font-black">"{pendingTemplate?.name}"</span>?
+                </p>
+                <p className="font-mono text-[10px] text-blueprint-white/40 uppercase tracking-tighter">
+                  This will pre-fill the Goal and Sensitive Data fields, overwriting current entries.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button 
+                  onClick={() => setShowTemplateConfirm(false)}
+                  className="flex-1 blueprint-button border-blueprint-line-solid/30 text-blueprint-line-solid/60 tracking-[0.2em]"
+                >
+                  ABORT
+                </button>
+                <button 
+                  onClick={() => pendingTemplate && executeTemplate(pendingTemplate)}
+                  className="flex-1 blueprint-button blueprint-button-primary tracking-[0.2em]"
+                >
+                  CONFIRM CHANGE
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Left Column: Target Profile */}
         <div className="lg:col-span-2 space-y-10">
           <section className="blueprint-panel p-8 relative">
-            <h3 className="text-lg font-bold uppercase mb-8 flex items-center gap-3 text-blueprint-white tracking-[0.2em] border-b border-blueprint-line pb-4">
-              <AlertCircle size={18} className="text-blueprint-line-solid" /> System Profile
-            </h3>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-blueprint-line pb-4">
+              <h3 className="text-lg font-bold uppercase flex items-center gap-3 text-blueprint-white tracking-[0.2em]">
+                <AlertCircle size={18} className="text-blueprint-line-solid" /> System Profile
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-[9px] font-mono font-bold text-blueprint-line-solid opacity-50 uppercase tracking-widest self-center mr-2">Templates:</span>
+                {INDUSTRY_TEMPLATES.map((tmpl) => (
+                  <button
+                    key={tmpl.name}
+                    onClick={() => applyTemplate(tmpl)}
+                    className="text-[9px] font-mono font-bold px-2 py-1 border border-blueprint-line-solid/20 text-blueprint-line-solid/60 hover:text-blueprint-line-solid hover:border-blueprint-line-solid/50 hover:bg-blueprint-line-solid/5 transition-all uppercase tracking-tighter"
+                  >
+                    {tmpl.name}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="grid grid-cols-1 gap-8">
               <div className="space-y-2">
                 <label className="blueprint-label">

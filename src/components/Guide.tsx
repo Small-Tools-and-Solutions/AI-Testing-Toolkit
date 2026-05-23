@@ -3,29 +3,29 @@ import { Shield, Target, Play, FileText, CheckCircle } from 'lucide-react';
 export default function Guide() {
   const steps = [
     {
-      title: "Setup Profile",
+      title: "Setup Assessment",
       icon: <Target className="text-blueprint-accent" />,
-      desc: "Create a new assessment and describe your AI system or RAG assistant. Detail its core purpose and context."
+      desc: "Go to the Assessments page and click 'New Assessment'. Fill in the profile details: the System Name is a mandatory required field."
     },
     {
-      title: "Configure Tests",
+      title: "Configure Content",
       icon: <Shield className="text-blueprint-line-solid" />,
-      desc: "Select mandatory security tests from our library or use the analysis engine to tailor scenarios to your system."
+      desc: "Click 'Setup' on your assessment row. Use the library to import security tests or add your own custom prompts that you want to test."
     },
     {
-      title: "Run Assessment",
+      title: "Run Protocols",
       icon: <Play className="text-blueprint-success" />,
-      desc: "Run prompts through your AI. Monitor logs and compare responses against expected behavior."
+      desc: "Select 'Run' to start testing. Execute the prompts against your AI system and record the responses to check for vulnerabilities."
     },
     {
-      title: "Audit Results",
+      title: "Audit Findings",
       icon: <CheckCircle className="text-blueprint-error" />,
-      desc: "Review results and finalize findings. Attach evidence and notes for compliance review."
+      desc: "Review the results and verify the system's behavior. Mark each test as Pass or Fail to update the overall security posture."
     },
     {
-      title: "Export Report",
+      title: "View Report",
       icon: <FileText className="text-blueprint-line-solid" />,
-      desc: "Generate an executive security report. Share detailed findings and remediation paths with stakeholders."
+      desc: "Select 'Report' to generate the executive summary. Access professional visualizations, charts, and detailed data logs of your audit."
     }
   ];
 
