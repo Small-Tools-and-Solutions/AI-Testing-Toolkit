@@ -25,6 +25,7 @@ export interface TestPack {
   status: TestPackStatus;
   createdAt: string;
   updatedAt: string;
+  isDraft?: boolean;
   caseCounts?: {
     total: number;
     pass: number;

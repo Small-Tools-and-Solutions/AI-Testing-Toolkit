@@ -26,6 +26,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
 
   const [hasSavedThisSession, setHasSavedThisSession] = useState(false);
   const [showTemplateConfirm, setShowTemplateConfirm] = useState(false);
+  const [showScanConfirm, setShowScanConfirm] = useState(false);
   const [pendingTemplate, setPendingTemplate] = useState<typeof INDUSTRY_TEMPLATES[0] | null>(null);
 
   useEffect(() => {
@@ -113,6 +114,10 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
   const handleManualSave = () => {
     if (!system || !pack) return;
     setSaving(true);
+    
+    const updatedPack = { ...pack, isDraft: false };
+    setPack(updatedPack);
+    updatePack(updatedPack);
     updateSystem(system);
     
     // Once saved, we silent the template warning for this session
@@ -138,7 +143,10 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
     if (!system || !pack) return;
     setSaving(true);
     
-    // Save system changes
+    // Save system changes and unmark draft
+    const updatedPack = { ...pack, isDraft: false };
+    setPack(updatedPack);
+    updatePack(updatedPack);
     updateSystem(system);
     setHasSavedThisSession(true);
     
@@ -173,8 +181,18 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
     updateCaseCounts(id);
   };
 
+  const handleRunScanClick = () => {
+    const current = getCases(id);
+    if (current.length > 0) {
+      setShowScanConfirm(true);
+    } else {
+      generateScenarios();
+    }
+  };
+
   const generateScenarios = async () => {
     if (!system) return;
+    setShowScanConfirm(false);
     setGenerating(true);
     
     // Simulate thinking/analyzing for UX
@@ -231,9 +249,8 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
   };
 
   const handleAbort = async () => {
-    const cases = getCases(id);
-    // Only auto-delete if it's a default-named mission with NO test cases (never committed/probed)
-    if (system?.name === 'NEW AI SYSTEM' && cases.length === 0) {
+    // If it was never saved and is marked as a draft, purge it
+    if (pack?.isDraft) {
       deletePack(id);
     }
     onClose();
@@ -267,7 +284,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
               <Save size={14} /> {saving ? 'Saving...' : 'Save Progress'}
             </button>
             <button onClick={handleAbort} className="blueprint-button flex items-center gap-2">
-              <X size={14} /> Cancel
+              <X size={14} /> {pack.isDraft ? 'Discard Draft' : 'Cancel'}
             </button>
             <button 
               disabled={saving || !system.name || system.name === 'NEW AI SYSTEM'}
@@ -336,6 +353,49 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
                   className="flex-1 blueprint-button blueprint-button-primary tracking-[0.2em]"
                 >
                   CONFIRM CHANGE
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Scan Confirmation Modal */}
+      <AnimatePresence>
+        {showScanConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-blueprint-paper/80 backdrop-blur-sm">
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="blueprint-panel p-8 bg-blueprint-paper border-blueprint-accent/40 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+            >
+              <div className="flex items-center gap-4 text-blueprint-accent mb-6">
+                <Wand2 size={28} />
+                <h2 className="text-xl font-bold uppercase tracking-widest leading-none">Security Scan</h2>
+              </div>
+              
+              <div className="space-y-4 mb-8">
+                <p className="font-mono text-sm text-blueprint-white/80 leading-relaxed uppercase tracking-widest">
+                  This assessment already contains curated tests. Running a new scan may generate <span className="text-blueprint-accent font-black">redundant or less optimized</span> prompts.
+                </p>
+                <p className="font-mono text-[10px] text-blueprint-white/40 uppercase tracking-tighter">
+                  Do you want to proceed with the custom security analysis?
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button 
+                  onClick={() => setShowScanConfirm(false)}
+                  className="flex-1 blueprint-button border-blueprint-line-solid/30 text-blueprint-line-solid/60 tracking-[0.2em]"
+                >
+                  ABORT
+                </button>
+                <button 
+                  onClick={generateScenarios}
+                  className="flex-1 blueprint-button border-blueprint-accent text-blueprint-accent hover:bg-blueprint-accent/10 tracking-[0.2em]"
+                >
+                  RUN SCAN
                 </button>
               </div>
             </motion.div>
@@ -417,7 +477,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
             
             <button 
               disabled={generating}
-              onClick={generateScenarios}
+              onClick={handleRunScanClick}
               className="w-full blueprint-button blueprint-button-primary py-4 text-xs tracking-[0.3em] flex items-center justify-center gap-3 group-hover:shadow-[0_0_20px_rgba(100,255,218,0.2)] transition-all duration-500"
             >
               <div className={generating ? 'animate-spin' : ''}><Wand2 size={16} /></div>

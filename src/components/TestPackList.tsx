@@ -41,7 +41,8 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
       systemId: systemId,
       status: 'AMBER',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      isDraft: true
     };
 
     // Construct initial test cases from the library bank
@@ -94,7 +95,8 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
       systemId: systemId,
       status: 'AMBER',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      isDraft: true
     };
 
     updateSystem(newSystem);

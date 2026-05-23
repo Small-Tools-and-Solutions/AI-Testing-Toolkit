@@ -209,7 +209,10 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
         {/* Sidebar: Test List */}
         <aside className="lg:col-span-1 lg:sticky lg:top-8 h-fit">
           <div className="blueprint-panel p-6 bg-blueprint-paper/20 max-h-[600px] flex flex-col">
-            <h3 className="blueprint-label border-b border-blueprint-line pb-3 mb-4 shrink-0">Assessment Test List</h3>
+            <div className="flex items-center justify-between border-b border-blueprint-line pb-3 mb-4 shrink-0">
+              <h3 className="blueprint-label !mb-0">Assessment Test List</h3>
+              <span className="font-mono text-xs text-blueprint-line-solid font-bold tracking-widest">{cases.length}</span>
+            </div>
             <div className="flex-1 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 pr-1">
               {cases.map((c, i) => (
                 <button 
