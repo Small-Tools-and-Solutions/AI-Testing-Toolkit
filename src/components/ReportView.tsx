@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TestPack, TestCase, AISystem } from '../types';
-import { Shield, Download, ChevronLeft, Printer, Filter, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, HelpCircle } from 'lucide-react';
+import { Shield, Download, ChevronLeft, Printer, Filter, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, HelpCircle, Copy, ArrowRight } from 'lucide-react';
 import { BarChart, Bar, ResponsiveContainer, Cell, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { getFriendlyDate } from '../lib/dateUtils';
 import { useMemoryStore } from '../lib/memoryStore';
@@ -12,16 +12,40 @@ interface ReportViewProps {
 }
 
 export default function ReportView({ id, onClose }: ReportViewProps) {
-  const { getPack, getSystem, getCases } = useMemoryStore();
+  const { getPack, getSystem, getCases, updateTestCase } = useMemoryStore();
   const [pack, setPack] = useState<TestPack | null>(null);
   const [system, setSystem] = useState<AISystem | null>(null);
   const [cases, setCases] = useState<TestCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'ALL' | 'PASS' | 'FAIL' | 'NOT TESTED'>('ALL');
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const toggleExpand = (id: string) => {
     setExpandedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  };
+
+  const handleUpdateCase = (updatedCase: TestCase) => {
+    updateTestCase(id, updatedCase);
+    setCases(prev => prev.map(c => c.id === updatedCase.id ? updatedCase : c));
+    
+    // Also update the pack in local state to reflect status changes (RED/AMBER/GREEN)
+    const p = getPack(id);
+    if (p) setPack(p);
+  };
+
+  const handleCopyPrompt = (text: string, caseId: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(caseId);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const replicateExpected = (testCase: TestCase) => {
+    handleUpdateCase({
+      ...testCase,
+      actualResponse: testCase.expectedBehaviour,
+      result: 'PASS'
+    });
   };
 
   useEffect(() => {
@@ -285,27 +309,63 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                                           <span className="text-sm font-black">{c.libraryId || 'UNC_REF'}</span>
                                         </div>
                                         <div className="space-y-1">
-                                          <span className={`px-2 py-0.5 text-[10px] font-mono font-black uppercase tracking-widest ${c.result === 'PASS' ? 'bg-blueprint-success text-blueprint-paper' : c.result === 'FAIL' ? 'bg-blueprint-error text-blueprint-paper' : 'bg-blueprint-accent text-blueprint-paper'}`}>{c.riskArea}</span>
-                                          <h4 className="text-xl font-bold uppercase tracking-tight text-blueprint-white">{c.prompt}</h4>
+                                           <span className={`px-2 py-0.5 text-[10px] font-mono font-black uppercase tracking-widest ${c.result === 'PASS' ? 'bg-blueprint-success text-blueprint-paper' : c.result === 'FAIL' ? 'bg-blueprint-error text-blueprint-paper' : 'bg-blueprint-accent text-blueprint-paper'}`}>{c.riskArea}</span>
+                                           <h4 
+                                              onClick={() => handleCopyPrompt(c.prompt, c.id)}
+                                              className="text-xl font-bold uppercase tracking-tight text-blueprint-white cursor-pointer hover:text-blueprint-accent transition-colors flex items-center gap-2 group/title"
+                                           >
+                                              {c.prompt}
+                                              <Copy size={16} className={`opacity-0 group-hover/title:opacity-100 transition-opacity ${copiedId === c.id ? 'text-blueprint-success' : 'text-blueprint-line-solid/40'}`} />
+                                              {copiedId === c.id && <span className="text-[10px] lowercase italic font-normal tracking-normal text-blueprint-success">Copied to clipboard</span>}
+                                           </h4>
                                         </div>
                                       </div>
-                                      <div className={`px-4 py-1.5 border font-black uppercase tracking-widest text-xs ${c.result === 'PASS' ? 'border-blueprint-success text-blueprint-success' : c.result === 'FAIL' ? 'border-blueprint-error text-blueprint-error' : 'border-blueprint-accent text-blueprint-accent'}`}>
-                                        {c.result}
+                                      <div className="flex gap-2">
+                                        {(['PASS', 'FAIL', 'NOT TESTED'] as const).map(res => (
+                                          <button
+                                            key={res}
+                                            onClick={() => handleUpdateCase({ ...c, result: res })}
+                                            className={`px-4 py-1.5 border font-black uppercase tracking-widest text-[10px] transition-all ${
+                                              c.result === res 
+                                                ? res === 'PASS' ? 'bg-blueprint-success border-blueprint-success text-blueprint-paper shadow-[0_0_15px_rgba(0,255,150,0.3)]' :
+                                                  res === 'FAIL' ? 'bg-blueprint-error border-blueprint-error text-blueprint-paper shadow-[0_0_15px_rgba(255,70,70,0.3)]' :
+                                                  'bg-blueprint-accent border-blueprint-accent text-blueprint-paper'
+                                                : 'border-blueprint-line-solid/20 text-blueprint-line-solid/40 hover:border-blueprint-line-solid hover:text-blueprint-line-solid'
+                                            }`}
+                                          >
+                                            {res === 'NOT TESTED' ? 'PENDING' : res}
+                                          </button>
+                                        ))}
                                       </div>
                                     </div>
                                     
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-mono text-[10px] uppercase tracking-widest">
+                                    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 lg:gap-8 font-mono text-[10px] uppercase tracking-widest">
                                        <div className="space-y-2">
                                           <p className="blueprint-label !text-[8px] opacity-30">Expected Behavior</p>
-                                          <div className="p-4 bg-blueprint-paper/40 border border-blueprint-line/20 text-blueprint-white text-sm lowercase italic leading-relaxed">
+                                          <div className="p-4 bg-blueprint-paper/40 border border-blueprint-line/20 text-blueprint-white text-sm lowercase italic leading-relaxed min-h-[100px]">
                                             {c.expectedBehaviour}
                                           </div>
                                        </div>
+
+                                       <div className="flex flex-col items-center justify-center gap-2 pt-6">
+                                          <button 
+                                            onClick={() => replicateExpected(c)}
+                                            className="p-3 border border-blueprint-line-solid/20 text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:border-blueprint-line-solid hover:bg-blueprint-line-solid/10 transition-all rounded-full group/arrow"
+                                            title="Replicate Expected Behavior into Actual Response"
+                                          >
+                                            <ArrowRight size={20} className="group-hover/arrow:translate-x-1 transition-transform" />
+                                          </button>
+                                          <span className="text-[8px] opacity-20 tracking-tighter">REPLICATE</span>
+                                       </div>
+
                                        <div className="space-y-2">
                                           <p className="blueprint-label !text-[8px] opacity-30">Actual Response</p>
-                                          <div className={`p-4 bg-blueprint-paper/60 border ${c.result === 'FAIL' ? 'border-blueprint-error/40 text-blueprint-error' : 'border-blueprint-line/40 text-blueprint-white'} text-sm font-bold lowercase leading-relaxed`}>
-                                            {c.actualResponse || 'No response logs recovered'}
-                                          </div>
+                                          <textarea
+                                            value={c.actualResponse}
+                                            onChange={(e) => handleUpdateCase({ ...c, actualResponse: e.target.value })}
+                                            placeholder="Enter AI response result..."
+                                            className={`w-full p-4 bg-blueprint-paper/60 border ${c.result === 'FAIL' ? 'border-blueprint-error/40 text-blueprint-error' : 'border-blueprint-line/40 text-blueprint-white'} text-sm font-bold lowercase leading-relaxed min-h-[100px] blueprint-input resize-none h-full`}
+                                          />
                                        </div>
                                     </div>
                                     

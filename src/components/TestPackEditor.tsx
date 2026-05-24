@@ -23,6 +23,9 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
   const [showSyncToast, setShowSyncToast] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generatedTests, setGeneratedTests] = useState<any[]>([]);
+  const [manualPrompt, setManualPrompt] = useState('');
+  const [manualExpected, setManualExpected] = useState('');
+  const [isManualExpanded, setIsManualExpanded] = useState(false);
 
   const [hasSavedThisSession, setHasSavedThisSession] = useState(false);
   const [showTemplateConfirm, setShowTemplateConfirm] = useState(false);
@@ -248,6 +251,31 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
     setGeneratedTests([]);
   };
 
+  const handleAddManualTest = () => {
+    if (!manualPrompt.trim()) return;
+    
+    const currentCases = getCases(id);
+    const newCase: TestCase = {
+      id: crypto.randomUUID(),
+      testPackId: id,
+      category: 'CUSTOM',
+      prompt: manualPrompt,
+      expectedBehaviour: manualExpected || 'Assess if the AI correctly adheres to system guards.',
+      actualResponse: '',
+      result: 'NOT TESTED' as const,
+      riskArea: 'MANUAL_OVERRIDE',
+      priority: 'High',
+      notes: 'User defined custom test case.'
+    };
+    
+    updateCases(id, [...currentCases, newCase]);
+    updateCaseCounts(id);
+    
+    setManualPrompt('');
+    setManualExpected('');
+    setIsManualExpanded(false);
+  };
+
   const handleAbort = async () => {
     // If it was never saved and is marked as a draft, purge it
     if (pack?.isDraft) {
@@ -465,6 +493,57 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
 
         {/* Right Column: AI Recon Engine */}
         <div className="space-y-8">
+          <div className="blueprint-panel p-8 bg-blueprint-line-solid/[0.03] border-blueprint-line-solid/30 relative overflow-hidden group">
+            <h3 className="text-lg font-bold uppercase flex items-center gap-3 text-blueprint-white tracking-[0.1em] mb-6">
+              <ListPlus size={24} className="text-blueprint-line-solid" /> Custom Vector Input
+            </h3>
+            
+            {!isManualExpanded ? (
+              <button 
+                onClick={() => setIsManualExpanded(true)}
+                className="w-full blueprint-button border-blueprint-line-solid/30 text-blueprint-line-solid/60 hover:text-blueprint-line-solid hover:border-blueprint-line-solid py-4 text-[10px] tracking-[0.2em] font-bold transition-all uppercase"
+              >
+                + ADD CUSTOM PROMPT
+              </button>
+            ) : (
+              <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="space-y-1">
+                  <label className="text-[9px] font-mono font-bold text-blueprint-line-solid uppercase tracking-widest">Test Prompt</label>
+                  <textarea 
+                    value={manualPrompt}
+                    onChange={(e) => setManualPrompt(e.target.value)}
+                    className="blueprint-input w-full h-24 text-[11px] placeholder:opacity-20"
+                    placeholder="Enter your custom probe/prompt..."
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-mono font-bold text-blueprint-line-solid uppercase tracking-widest">Expected Result</label>
+                  <textarea 
+                    value={manualExpected}
+                    onChange={(e) => setManualExpected(e.target.value)}
+                    className="blueprint-input w-full h-16 text-[11px] placeholder:opacity-20"
+                    placeholder="What should the AI do or refuse?"
+                  />
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button 
+                    onClick={() => setIsManualExpanded(false)}
+                    className="flex-1 blueprint-button border-blueprint-line-solid/20 text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:border-blueprint-line-solid py-2 text-[9px] tracking-[0.1em]"
+                  >
+                    CANCEL
+                  </button>
+                  <button 
+                    disabled={!manualPrompt.trim()}
+                    onClick={handleAddManualTest}
+                    className="flex-2 blueprint-button blueprint-button-primary py-2 text-[9px] tracking-[0.1em]"
+                  >
+                    ADD TO ASSESSMENT
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="blueprint-panel p-8 bg-blueprint-line-solid/[0.03] border-blueprint-line-solid/30 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold uppercase flex items-center gap-3 text-blueprint-white tracking-[0.1em] sm:tracking-[0.15em] leading-tight">

@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from 'react';
-import { AISystem, TestPack, TestCase } from '../types';
+import { AISystem, TestPack, TestCase, TestPackStatus } from '../types';
 
 const STORAGE_KEY = 'cipherwatch_audit_registry_v1';
 
@@ -21,6 +21,7 @@ interface MemoryStoreContextType {
   updateSystem: (system: AISystem) => void;
   updatePack: (pack: TestPack) => void;
   updateCases: (packId: string, cases: TestCase[]) => void;
+  updateTestCase: (packId: string, testCase: TestCase) => void;
   deletePack: (packId: string) => void;
   getSystem: (id: string) => AISystem | undefined;
   getPack: (id: string) => TestPack | undefined;
@@ -77,6 +78,26 @@ export function MemoryStoreProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
+  const updateTestCase = useCallback((packId: string, testCase: TestCase) => {
+    setData(prev => {
+      const currentCases = prev.testCases[packId] || [];
+      const updatedCases = currentCases.map(c => c.id === testCase.id ? testCase : c);
+      
+      // Auto-update pack status based on cases
+      const hasFail = updatedCases.some(c => c.result === 'FAIL');
+      const allTested = updatedCases.length > 0 && updatedCases.every(c => c.result !== 'NOT TESTED');
+      
+      const newStatus: TestPackStatus = hasFail ? 'RED' : (allTested ? 'GREEN' : 'AMBER');
+      const newPacks = prev.testPacks.map(p => p.id === packId ? ({ ...p, status: newStatus, updatedAt: new Date().toISOString() } as TestPack) : p);
+
+      return {
+        ...prev,
+        testPacks: newPacks,
+        testCases: { ...prev.testCases, [packId]: updatedCases }
+      };
+    });
+  }, []);
+
   const deletePack = useCallback((packId: string) => {
     setData(prev => {
       const pack = prev.testPacks.find(p => p.id === packId);
@@ -104,6 +125,7 @@ export function MemoryStoreProvider({ children }: { children: ReactNode }) {
     updateSystem,
     updatePack,
     updateCases,
+    updateTestCase,
     deletePack,
     getSystem,
     getPack,

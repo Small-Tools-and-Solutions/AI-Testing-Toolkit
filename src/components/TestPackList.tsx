@@ -290,13 +290,6 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                       <Eye size={12} /> SETUP
                     </button>
                     <button 
-                      onClick={() => onSelectPack(pack.id, 'run')}
-                      className="px-3 py-1.5 border border-blueprint-line-solid bg-transparent text-blueprint-line-solid flex items-center gap-2 hover:bg-blueprint-line-solid hover:text-blueprint-paper transition-all uppercase font-bold tracking-widest"
-                      title="Run Assessment"
-                    >
-                      <Play size={10} fill="currentColor" /> RUN
-                    </button>
-                    <button 
                       onClick={() => onSelectPack(pack.id, 'report')}
                       className="px-3 py-1.5 border border-blueprint-success bg-transparent text-blueprint-success flex items-center gap-2 hover:bg-blueprint-success hover:text-blueprint-paper transition-all uppercase font-bold tracking-widest"
                       title="Report View"
