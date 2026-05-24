@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TestPack, TestCase, AISystem } from '../types';
-import { Shield, Download, ChevronLeft, Printer, Filter, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, HelpCircle, Copy, ArrowRight } from 'lucide-react';
+import { Shield, Download, ChevronLeft, Printer, Filter, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, HelpCircle, Copy, ArrowRight, Eraser } from 'lucide-react';
 import { BarChart, Bar, ResponsiveContainer, Cell, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { getFriendlyDate } from '../lib/dateUtils';
 import { useMemoryStore } from '../lib/memoryStore';
@@ -24,6 +24,8 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
   const toggleExpand = (id: string) => {
     setExpandedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
+
+  const collapseAll = () => setExpandedIds([]);
 
   const handleUpdateCase = (updatedCase: TestCase) => {
     updateTestCase(id, updatedCase);
@@ -231,7 +233,15 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
         <section className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4 flex-1">
-              <h3 className="text-lg font-bold uppercase tracking-[0.2em] text-blueprint-white">Collection</h3>
+              <div className="space-y-2">
+                <h3 className="text-lg font-bold uppercase tracking-[0.2em] text-blueprint-white">Collection</h3>
+                <button 
+                  onClick={collapseAll}
+                  className="text-[9px] font-mono font-black text-blueprint-line-solid/60 hover:text-blueprint-line-solid transition-colors flex items-center gap-1 uppercase tracking-widest"
+                >
+                  <ChevronUp size={10} /> Collapse All
+                </button>
+              </div>
               <div className="flex-1 h-px bg-blueprint-line" />
             </div>
             
@@ -358,8 +368,19 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                                           <span className="text-[8px] opacity-20 tracking-tighter">REPLICATE</span>
                                        </div>
 
-                                       <div className="space-y-2">
-                                          <p className="blueprint-label !text-[8px] opacity-30">Actual Response</p>
+                                       <div className="space-y-2 relative group/response">
+                                          <div className="flex items-center justify-between">
+                                            <p className="blueprint-label !text-[8px] opacity-30">Actual Response</p>
+                                            {c.actualResponse && (
+                                              <button 
+                                                onClick={() => handleUpdateCase({ ...c, actualResponse: '' })}
+                                                className="text-blueprint-line-solid/30 hover:text-blueprint-error transition-colors p-1"
+                                                title="Clear Response"
+                                              >
+                                                <Eraser size={12} />
+                                              </button>
+                                            )}
+                                          </div>
                                           <textarea
                                             value={c.actualResponse}
                                             onChange={(e) => handleUpdateCase({ ...c, actualResponse: e.target.value })}
