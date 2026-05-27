@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Plus, Eye, Play, Search, FileBarChart, Trash2, X, AlertTriangle, LayoutGrid } from 'lucide-react';
+import { 
+  Plus, Eye, Search, Trash2, AlertTriangle, LayoutGrid, 
+  File, ShieldCheck, Zap, MessageSquare, BookOpen, Users, Landmark, Heart, Gavel, FileBarChart
+} from 'lucide-react';
 import { getFriendlyDate } from '../lib/dateUtils';
 import { useMemoryStore } from '../lib/memoryStore';
 import { motion, AnimatePresence } from 'motion/react';
@@ -10,6 +13,29 @@ import { AISystem, TestPack, TestCase } from '../types';
 interface TestPackListProps {
   onSelectPack: (id: string, mode?: 'edit' | 'run' | 'report') => void;
 }
+
+const TemplateIcon = ({ name, className }: { name?: string; className?: string }) => {
+  const iconMap: Record<string, any> = {
+    File, ShieldCheck, Zap, MessageSquare, BookOpen, Users, Landmark, Heart, Gavel
+  };
+  
+  const colorMap: Record<string, string> = {
+    Zap: 'text-red-500',
+    Landmark: 'text-emerald-500',
+    Heart: 'text-rose-500',
+    Users: 'text-cyan-500',
+    BookOpen: 'text-violet-500',
+    Gavel: 'text-amber-500',
+    MessageSquare: 'text-blue-500',
+    File: 'text-blueprint-line-solid',
+    ShieldCheck: 'text-blueprint-success'
+  };
+
+  const IconComponent = name && iconMap[name] ? iconMap[name] : LayoutGrid;
+  const colorClass = name && colorMap[name] ? colorMap[name] : 'text-blueprint-line-solid/40';
+  
+  return <IconComponent size={14} className={`${colorClass} ${className || ''}`} />;
+};
 
 export default function TestPackList({ onSelectPack }: TestPackListProps) {
   const { testPacks, updatePack, updateSystem, updateCases, deletePack, getSystem } = useMemoryStore();
@@ -42,7 +68,8 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
       status: 'AMBER',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      isDraft: true
+      isDraft: true,
+      templateId: template.id
     };
 
     // Construct initial test cases from the library bank
@@ -96,7 +123,8 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
       status: 'AMBER',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      isDraft: true
+      isDraft: true,
+      templateId: 'tpl-blank'
     };
 
     updateSystem(newSystem);
@@ -178,26 +206,48 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6 bg-blueprint-line-solid/[0.03] border border-blueprint-line-solid/10 mb-8">
-              {ASSESSMENT_TEMPLATES.map((tmpl) => (
-                <div 
-                  key={tmpl.id} 
-                  className="blueprint-panel p-6 flex flex-col gap-4 border-blueprint-line-solid/20 bg-blueprint-paper/40 hover:border-blueprint-line-solid/40 transition-all group/card"
-                >
-                  <div className="space-y-1">
-                    <h4 className="text-xs font-bold text-blueprint-line-solid uppercase tracking-[0.15em]">{tmpl.name}</h4>
-                    <p className="text-[10px] text-blueprint-white/40 uppercase tracking-tighter line-clamp-2">{tmpl.description}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-blueprint-line-solid/[0.03] border border-blueprint-line-solid/10 mb-8">
+              {ASSESSMENT_TEMPLATES.map((tmpl) => {
+                const isGlobal = tmpl.id === 'tpl-global-audit';
+                return (
+                  <div 
+                    key={tmpl.id} 
+                    className={`blueprint-panel p-6 flex flex-col gap-4 transition-all group/card ${
+                      isGlobal 
+                        ? 'border-blueprint-success/50 bg-blueprint-success/[0.03] shadow-[0_0_20px_rgba(0,255,150,0.05)]' 
+                        : 'border-blueprint-line-solid/20 bg-blueprint-paper/40 hover:border-blueprint-line-solid/40'
+                    }`}
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className={`text-xs font-bold uppercase tracking-[0.15em] ${isGlobal ? 'text-blueprint-success' : 'text-blueprint-line-solid'}`}>
+                          {tmpl.name}
+                        </h4>
+                        {isGlobal ? (
+                          <span className="text-[8px] bg-blueprint-success/10 text-blueprint-success px-1.5 py-0.5 font-bold tracking-widest border border-blueprint-success/20">
+                            RECOMMENDED
+                          </span>
+                        ) : (
+                          <TemplateIcon name={tmpl.icon} />
+                        )}
+                      </div>
+                      <p className="text-[10px] text-blueprint-white/40 uppercase tracking-tighter line-clamp-2">{tmpl.description}</p>
+                    </div>
+                    <div className="mt-auto">
+                      <button 
+                        onClick={() => useTemplate(tmpl)}
+                        className={`w-full py-2 border text-[10px] font-bold uppercase tracking-widest transition-all ${
+                          isGlobal
+                            ? 'border-blueprint-success/30 text-blueprint-success/80 hover:bg-blueprint-success hover:text-blueprint-paper'
+                            : 'border-blueprint-line-solid/30 text-blueprint-line-solid/80 hover:bg-blueprint-line-solid hover:text-blueprint-paper'
+                        }`}
+                      >
+                        Use Template
+                      </button>
+                    </div>
                   </div>
-                  <div className="mt-auto">
-                    <button 
-                      onClick={() => useTemplate(tmpl)}
-                      className="w-full py-2 border border-blueprint-line-solid/30 text-[10px] font-bold text-blueprint-line-solid/80 uppercase tracking-widest hover:bg-blueprint-line-solid hover:text-blueprint-paper transition-all"
-                    >
-                      Use Template
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
         )}

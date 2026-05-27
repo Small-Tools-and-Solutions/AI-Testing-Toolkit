@@ -26,6 +26,7 @@ export interface TestPack {
   createdAt: string;
   updatedAt: string;
   isDraft?: boolean;
+  templateId?: string;
   caseCounts?: {
     total: number;
     pass: number;

@@ -439,18 +439,20 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
               <h3 className="text-lg font-bold uppercase flex items-center gap-3 text-blueprint-white tracking-[0.2em]">
                 <AlertCircle size={18} className="text-blueprint-line-solid" /> System Profile
               </h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="text-[9px] font-mono font-bold text-blueprint-line-solid opacity-50 uppercase tracking-widest self-center mr-2">Templates:</span>
-                {INDUSTRY_TEMPLATES.map((tmpl) => (
-                  <button
-                    key={tmpl.name}
-                    onClick={() => applyTemplate(tmpl)}
-                    className="text-[9px] font-mono font-bold px-2 py-1 border border-blueprint-line-solid/20 text-blueprint-line-solid/60 hover:text-blueprint-line-solid hover:border-blueprint-line-solid/50 hover:bg-blueprint-line-solid/5 transition-all uppercase tracking-tighter"
-                  >
-                    {tmpl.name}
-                  </button>
-                ))}
-              </div>
+              {(!pack.templateId || pack.templateId === 'tpl-blank') && (
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-[9px] font-mono font-bold text-blueprint-line-solid opacity-50 uppercase tracking-widest self-center mr-2">Templates:</span>
+                  {INDUSTRY_TEMPLATES.map((tmpl) => (
+                    <button
+                      key={tmpl.name}
+                      onClick={() => applyTemplate(tmpl)}
+                      className="text-[9px] font-mono font-bold px-2 py-1 border border-blueprint-line-solid/20 text-blueprint-line-solid/60 hover:text-blueprint-line-solid hover:border-blueprint-line-solid/50 hover:bg-blueprint-line-solid/5 transition-all uppercase tracking-tighter"
+                    >
+                      {tmpl.name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-1 gap-8">
               <div className="space-y-2">
