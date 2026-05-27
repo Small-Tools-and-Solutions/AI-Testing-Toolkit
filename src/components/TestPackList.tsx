@@ -52,10 +52,27 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
   };
 
   const generateAssessmentId = (templateId?: string) => {
-    const prefix = templateId?.replace('tpl-', '').substring(0, 3).toUpperCase() || 'USR';
-    const date = new Date().toISOString().slice(2, 10).replace(/-/g, ''); // YYMMDD
+    let prefix = 'USER';
+    const tid = templateId?.toLowerCase() || '';
+    
+    if (tid.includes('global')) prefix = 'GLOBAL';
+    else if (tid.includes('red-team') || tid.includes('adversary')) prefix = 'ADVERSARY';
+    else if (tid.includes('customer')) prefix = 'CUSTOMER';
+    else if (tid.includes('internal')) prefix = 'INTERNAL';
+    else if (tid.includes('hr-')) prefix = 'RESOURCES';
+    else if (tid.includes('financial')) prefix = 'FINANCIAL';
+    else if (tid.includes('health')) prefix = 'HEALTHCARE';
+    else if (tid.includes('legal')) prefix = 'LEGAL';
+    else if (tid.includes('blank') || tid.includes('custom')) prefix = 'CUSTOM';
+    else prefix = tid.replace('tpl-', '').substring(0, 3).toUpperCase() || 'USER';
+
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yy = String(now.getFullYear()).slice(-2);
+    const dateStr = `${dd}${mm}${yy}`;
     const random = Math.random().toString(36).substring(2, 5).toUpperCase();
-    return `${prefix}-${date}-${random}`;
+    return `${prefix}-${dateStr}-${random}`;
   };
 
   const useTemplate = (template: AssessmentTemplate) => {

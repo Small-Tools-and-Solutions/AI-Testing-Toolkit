@@ -139,7 +139,7 @@ export default function TestLibrary() {
           <tbody className="divide-y divide-blueprint-line">
             {paginatedTests.map((test) => (
               <tr key={test.id} className="hover:bg-blueprint-line-solid/5 transition-colors group">
-                <td className="px-6 py-4 border-r border-blueprint-line font-mono font-bold text-blueprint-line-solid/40 group-hover:text-blueprint-line-solid text-xs">
+                <td className="px-6 py-4 border-r border-blueprint-line font-mono font-black text-blueprint-line-solid/80 group-hover:text-blueprint-line-solid text-xs">
                   {test.id}
                 </td>
                 <td className="px-6 py-4 border-r border-blueprint-line">
@@ -201,14 +201,14 @@ function CopyCell({ prompt, hint }: { prompt: string; hint?: string }) {
       className="p-6 h-full cursor-pointer group/copy relative hover:bg-blueprint-line-solid/[0.02] transition-colors"
     >
       <div className="flex justify-between gap-6 items-start pb-3">
-        <span className="font-mono text-[11px] leading-relaxed text-blueprint-white/60 group-hover/copy:text-blueprint-white transition-colors">
+        <span className="font-mono text-[11px] leading-relaxed text-blueprint-white group-hover/copy:text-blueprint-accent transition-colors">
           {prompt}
         </span>
         <div className={`
           p-1.5 border transition-all shrink-0
           ${copied 
             ? 'bg-blueprint-success border-blueprint-success text-blueprint-paper' 
-            : 'bg-transparent border-blueprint-line-solid/30 text-blueprint-line-solid opacity-30 group-hover/copy:opacity-100'}
+            : 'bg-blueprint-line-solid/5 border-blueprint-line-solid/30 text-blueprint-line-solid opacity-60 group-hover/copy:opacity-100 group-hover/copy:border-blueprint-line-solid'}
         `}>
           {copied ? <Check size={14} /> : <Copy size={14} />}
         </div>
