@@ -65,7 +65,7 @@
 }
 
 .blueprint-button-primary {
-  @apply bg-blueprint-line-solid text-blueprint-paper border-none font-bold;
+  @apply bg-blueprint-line-solid text-blueprint-paper border-none font-bold hover:bg-blueprint-line-solid/90 hover:text-blueprint-paper;
 }
 
 .blueprint-input {

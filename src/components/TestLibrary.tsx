@@ -19,7 +19,8 @@ export default function TestLibrary() {
 
   const filteredTests = useMemo(() => {
     return BASELINE_TESTS.filter(t => {
-      const matchesSearch = t.prompt.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      const matchesSearch = t.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            t.prompt.toLowerCase().includes(searchTerm.toLowerCase()) || 
                             t.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             t.owaspArea.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = filterCategory === 'ALL' || t.category === filterCategory;
@@ -96,7 +97,7 @@ export default function TestLibrary() {
             {categories.map(c => (
               <button
                 key={c}
-                onClick={() => setFilterCategory(c)}
+                onClick={() => setFilterCategory(filterCategory === c ? 'ALL' : c)}
                 className={`
                   blueprint-button px-3 py-1.5
                   ${filterCategory === c 
