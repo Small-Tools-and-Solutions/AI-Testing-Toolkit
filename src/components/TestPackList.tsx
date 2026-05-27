@@ -38,15 +38,29 @@ const TemplateIcon = ({ name, className }: { name?: string; className?: string }
 };
 
 export default function TestPackList({ onSelectPack }: TestPackListProps) {
-  const { testPacks, updatePack, updateSystem, updateCases, deletePack, getSystem } = useMemoryStore();
+  const { testPacks, testCases, updatePack, updateSystem, updateCases, deletePack, getSystem } = useMemoryStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [packToDelete, setPackToDelete] = useState<string | string[] | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showGallery, setShowGallery] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+
+  const getTemplateIcon = (templateId?: string) => {
+    if (!templateId) return null;
+    const template = ASSESSMENT_TEMPLATES.find(t => t.id === templateId);
+    return template?.icon;
+  };
+
+  const generateAssessmentId = (templateId?: string) => {
+    const prefix = templateId?.replace('tpl-', '').substring(0, 3).toUpperCase() || 'USR';
+    const date = new Date().toISOString().slice(2, 10).replace(/-/g, ''); // YYMMDD
+    const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+    return `${prefix}-${date}-${random}`;
+  };
 
   const useTemplate = (template: AssessmentTemplate) => {
     const systemId = crypto.randomUUID();
-    const packId = crypto.randomUUID();
+    const packId = generateAssessmentId(template.id);
     
     const newSystem: AISystem = {
       id: systemId,
@@ -100,7 +114,7 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
 
   const createNewPack = () => {
     const systemId = crypto.randomUUID();
-    const packId = crypto.randomUUID();
+    const packId = generateAssessmentId('tpl-blank');
     
     // Default system definition
     const newSystem: AISystem = {
@@ -157,11 +171,45 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
     }
   };
 
-  const filteredPacks = testPacks.filter(p => {
+  const handleSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const filteredPacks = [...testPacks].filter(p => {
     const system = getSystem(p.systemId);
     const searchString = `${p.id} ${system?.name || ''}`.toLowerCase();
     return searchString.includes(searchTerm.toLowerCase());
   });
+
+  if (sortConfig) {
+    filteredPacks.sort((a, b) => {
+      const systemA = getSystem(a.systemId)?.name || '';
+      const systemB = getSystem(b.systemId)?.name || '';
+      const probesA = testCases[a.id]?.length || 0;
+      const probesB = testCases[b.id]?.length || 0;
+
+      let valA: any = '';
+      let valB: any = '';
+
+      switch (sortConfig.key) {
+        case 'no': valA = testPacks.indexOf(a); valB = testPacks.indexOf(b); break;
+        case 'status': valA = a.status; valB = b.status; break;
+        case 'probes': valA = probesA; valB = probesB; break;
+        case 'id': valA = a.id; valB = b.id; break;
+        case 'date': valA = a.createdAt; valB = b.createdAt; break;
+        case 'system': valA = systemA; valB = systemB; break;
+        default: break;
+      }
+
+      if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -283,12 +331,22 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                   />
                 </div>
               </th>
-              <th className="px-6 py-4 border-r border-blueprint-line w-16">No.</th>
-              <th className="px-6 py-4 border-r border-blueprint-line">Security Assessment</th>
-              <th className="px-6 py-4 border-r border-blueprint-line">Assessment ID</th>
-              <th className="px-6 py-4 border-r border-blueprint-line">Completion Timestamp</th>
-              <th className="px-6 py-4 border-r border-blueprint-line">Target System</th>
-              <th className="px-6 py-4 flex-1">Actions</th>
+              <th className="px-6 py-4 border-r border-blueprint-line w-16 cursor-pointer hover:bg-blueprint-line-solid/10 transition-colors" onClick={() => handleSort('no')}>
+                <div className="flex items-center gap-2">NO. {sortConfig?.key === 'no' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</div>
+              </th>
+              <th className="px-6 py-4 border-r border-blueprint-line cursor-pointer hover:bg-blueprint-line-solid/10 transition-colors" onClick={() => handleSort('status')}>
+                <div className="flex items-center gap-2">SECURITY ASSESSMENT {sortConfig?.key === 'status' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</div>
+              </th>
+              <th className="px-6 py-4 border-r border-blueprint-line cursor-pointer hover:bg-blueprint-line-solid/10 transition-colors" onClick={() => handleSort('id')}>
+                <div className="flex items-center gap-2">ASSESSMENT ID {sortConfig?.key === 'id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</div>
+              </th>
+              <th className="px-6 py-4 border-r border-blueprint-line cursor-pointer hover:bg-blueprint-line-solid/10 transition-colors" onClick={() => handleSort('date')}>
+                <div className="flex items-center gap-2">COMPLETION TIMESTAMP {sortConfig?.key === 'date' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</div>
+              </th>
+              <th className="px-6 py-4 border-r border-blueprint-line cursor-pointer hover:bg-blueprint-line-solid/10 transition-colors" onClick={() => handleSort('system')}>
+                <div className="flex items-center gap-2">TARGET SYSTEM {sortConfig?.key === 'system' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</div>
+              </th>
+              <th className="px-6 py-4 w-40">ACTIONS</th>
               <th className="px-6 py-4 w-12"></th>
             </tr>
           </thead>
@@ -309,20 +367,48 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                   {(index + 1).toString().padStart(4, '0')}
                 </td>
                 <td className="px-6 py-5 border-r border-blueprint-line">
-                  <div className="flex items-center gap-3">
-                    <div className={`
-                      w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]
-                      ${pack.status === 'RED' ? 'bg-blueprint-error' : 
-                        pack.status === 'AMBER' ? 'bg-blueprint-accent' : 
-                        'bg-blueprint-success'}
-                    `} />
-                    <span className={`text-[10px] font-bold ${pack.status === 'RED' ? 'text-blueprint-error' : pack.status === 'AMBER' ? 'text-blueprint-accent' : 'text-blueprint-success'}`}>
-                      {pack.status === 'RED' ? 'CRITICAL' : pack.status === 'AMBER' ? 'PENDING' : 'STABILIZED'}
-                    </span>
+                  <div className="flex flex-col gap-2">
+                    {(() => {
+                      const cases = testCases[pack.id] || [];
+                      const count = cases.length;
+                      const passed = cases.filter(c => c.result === 'PASS').length;
+                      const failed = cases.filter(c => c.result === 'FAIL').length;
+                      const pending = cases.filter(c => c.result === 'NOT TESTED').length;
+                      const isComplete = count > 0 && pending === 0;
+
+                      return (
+                        <>
+                          <div className="flex items-center gap-3">
+                            <div className={`
+                              w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]
+                              ${isComplete ? 'bg-blueprint-success' : 'bg-blueprint-accent'}
+                            `} />
+                            <span className={`text-[10px] font-bold ${isComplete ? 'text-blueprint-success' : 'text-blueprint-accent'}`}>
+                              {isComplete ? 'COMPLETE' : 'IN-PROGRESS'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 pl-5">
+                            <div className="flex items-center bg-blueprint-line-solid/5 border border-blueprint-line-solid/10 px-2 py-0.5 rounded-sm">
+                              <span className="text-[9px] font-mono font-black text-blueprint-line-solid/90 tracking-widest uppercase">
+                                {count} {count === 1 ? 'PROBE' : 'PROBES'}
+                              </span>
+                              {count > 0 && (
+                                <span className="text-[9px] font-mono font-black ml-2 flex items-center gap-1">
+                                  (<span className="text-blueprint-error">{failed}</span> / <span className="text-blueprint-success">{passed}</span> / <span className="text-blueprint-accent">{pending}</span>)
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
                 </td>
                 <td className="px-6 py-5 border-r border-blueprint-line font-bold text-blueprint-white tracking-widest">
-                  #{pack.id.substring(0, 12).toUpperCase()}
+                  <div className="flex items-center gap-2">
+                    <TemplateIcon name={getTemplateIcon(pack.templateId) || 'File'} className="opacity-80" />
+                    <span className="font-mono text-xs">#{pack.id}</span>
+                  </div>
                 </td>
                 <td className="px-6 py-5 border-r border-blueprint-line text-blueprint-white tracking-widest uppercase whitespace-nowrap">
                   {getFriendlyDate(new Date(pack.createdAt))}
@@ -330,33 +416,32 @@ export default function TestPackList({ onSelectPack }: TestPackListProps) {
                 <td className="px-6 py-5 border-r border-blueprint-line font-mono text-blueprint-accent hover:text-blueprint-accent/80 transition-colors italic tracking-tighter bg-blueprint-line-solid/[0.02]">
                    {getSystem(pack.systemId)?.name || 'UNKNOWN SYSTEM'}
                 </td>
-                <td className="px-6 py-5">
-                  <div className="flex items-center gap-3">
+                 <td className="px-6 py-5">
+                  <div className="flex items-center gap-2">
                     <button 
                       onClick={() => onSelectPack(pack.id, 'edit')}
-                      className="px-3 py-1.5 border border-blueprint-line-solid/20 text-blueprint-line-solid/60 flex items-center gap-2 hover:bg-blueprint-line-solid/10 hover:text-blueprint-line-solid hover:border-blueprint-line-solid transition-all uppercase font-bold tracking-widest"
+                      className="px-2 py-1.5 border border-blueprint-line-solid/20 text-blueprint-line-solid/60 flex items-center gap-2 hover:bg-blueprint-line-solid/10 hover:text-blueprint-line-solid hover:border-blueprint-line-solid transition-all uppercase font-bold tracking-widest text-[9px]"
                       title="Setup"
                     >
-                      <Eye size={12} /> SETUP
+                      <Eye size={10} /> SETUP
                     </button>
                     <button 
                       onClick={() => onSelectPack(pack.id, 'report')}
-                      className="px-3 py-1.5 border border-blueprint-success bg-transparent text-blueprint-success flex items-center gap-2 hover:bg-blueprint-success hover:text-blueprint-paper transition-all uppercase font-bold tracking-widest"
+                      className="px-2 py-1.5 border border-blueprint-success bg-transparent text-blueprint-success flex items-center gap-2 hover:bg-blueprint-success hover:text-blueprint-paper transition-all uppercase font-bold tracking-widest text-[9px]"
                       title="Report View"
                     >
-                      <FileBarChart size={12} /> REPORT
+                      <FileBarChart size={10} /> REPORT
+                    </button>
+                    <button 
+                      onClick={() => setPackToDelete(pack.id)}
+                      className="p-1.5 text-blueprint-error hover:text-blueprint-error hover:bg-blueprint-error/10 transition-all rounded-xs ml-auto border border-transparent hover:border-blueprint-error/20"
+                      title="Purge Schematic"
+                    >
+                      <Trash2 size={16} strokeWidth={2.5} />
                     </button>
                   </div>
                 </td>
-                <td className="px-6 py-5 text-right">
-                  <button 
-                    onClick={() => setPackToDelete(pack.id)}
-                    className="p-1.5 text-blueprint-error/40 hover:text-blueprint-error hover:bg-blueprint-error/10 transition-all rounded-xs"
-                    title="Purge Schematic"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </td>
+                <td className="px-6 py-5 w-4 hidden md:table-cell"></td>
               </tr>
             ))}
             {filteredPacks.length === 0 && (

@@ -350,9 +350,9 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                                     </div>
                                     
                                     <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 lg:gap-8 font-mono text-[10px] uppercase tracking-widest">
-                                       <div className="space-y-2">
-                                          <p className="blueprint-label !text-[8px] opacity-30">Expected Behavior</p>
-                                          <div className="p-4 bg-blueprint-paper/40 border border-blueprint-line/20 text-blueprint-white text-sm lowercase italic leading-relaxed min-h-[100px]">
+                                        <div className="space-y-2">
+                                          <p className="blueprint-label !text-[8px] opacity-70">Expected Behavior</p>
+                                          <div className="p-4 bg-blueprint-paper/40 border border-blueprint-line-solid/30 text-blueprint-white text-sm lowercase italic leading-relaxed min-h-[100px]">
                                             {c.expectedBehaviour}
                                           </div>
                                        </div>
@@ -360,24 +360,24 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                                        <div className="flex flex-col items-center justify-center gap-2 pt-6">
                                           <button 
                                             onClick={() => replicateExpected(c)}
-                                            className="p-3 border border-blueprint-line-solid/20 text-blueprint-line-solid/40 hover:text-blueprint-line-solid hover:border-blueprint-line-solid hover:bg-blueprint-line-solid/10 transition-all rounded-full group/arrow"
+                                            className="p-3 border border-blueprint-line-solid/40 text-blueprint-line-solid/70 hover:text-blueprint-line-solid hover:border-blueprint-line-solid hover:bg-blueprint-line-solid/10 transition-all rounded-full group/arrow ring ring-transparent hover:ring-blueprint-line-solid/20"
                                             title="Replicate Expected Behavior into Actual Response"
                                           >
                                             <ArrowRight size={20} className="group-hover/arrow:translate-x-1 transition-transform" />
                                           </button>
-                                          <span className="text-[8px] opacity-20 tracking-tighter">REPLICATE</span>
+                                          <span className="text-[10px] opacity-60 font-black tracking-tighter text-blueprint-line-solid">REPLICATE</span>
                                        </div>
 
                                        <div className="space-y-2 relative group/response">
                                           <div className="flex items-center justify-between">
-                                            <p className="blueprint-label !text-[8px] opacity-30">Actual Response</p>
+                                            <p className="blueprint-label !text-[8px] opacity-70">Actual Response</p>
                                             {c.actualResponse && (
                                               <button 
                                                 onClick={() => handleUpdateCase({ ...c, actualResponse: '' })}
-                                                className="text-blueprint-line-solid/30 hover:text-blueprint-error transition-colors p-1"
+                                                className="text-blueprint-error/60 hover:text-blueprint-error hover:bg-blueprint-error/10 transition-all p-1.5 border border-blueprint-error/20 hover:border-blueprint-error bg-blueprint-error/5"
                                                 title="Clear Response"
                                               >
-                                                <Eraser size={12} />
+                                                <Eraser size={14} />
                                               </button>
                                             )}
                                           </div>
@@ -385,7 +385,7 @@ export default function ReportView({ id, onClose }: ReportViewProps) {
                                             value={c.actualResponse}
                                             onChange={(e) => handleUpdateCase({ ...c, actualResponse: e.target.value })}
                                             placeholder="Enter AI response result..."
-                                            className={`w-full p-4 bg-blueprint-paper/60 border ${c.result === 'FAIL' ? 'border-blueprint-error/40 text-blueprint-error' : 'border-blueprint-line/40 text-blueprint-white'} text-sm font-bold lowercase leading-relaxed min-h-[100px] blueprint-input resize-none h-full`}
+                                            className={`w-full p-4 bg-blueprint-paper/60 border-2 ${c.result === 'FAIL' ? 'border-blueprint-error/60 text-blueprint-error shadow-[0_0_10px_rgba(255,85,85,0.1)]' : 'border-blueprint-line-solid/30 text-blueprint-white'} text-sm font-bold lowercase leading-relaxed min-h-[100px] blueprint-input resize-none h-full focus:border-blueprint-line-solid`}
                                           />
                                        </div>
                                     </div>

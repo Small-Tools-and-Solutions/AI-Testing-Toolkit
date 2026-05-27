@@ -114,8 +114,18 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
     }
   };
 
+  const isDefaultName = () => {
+    if (!system) return true;
+    const defaultNames = ['NEW AI SYSTEM', 'NEW SYSTEM', 'Omni-Neural Sentinel', 'Global Retail Support Node', 'Corp-Knowledge Navigator', 'Talent Acquisition Shield', 'Quantum Portfolio Analyzer', 'Med-Link Assistant', 'Lex-Intellect-Guard', 'Adversary Simulation Node'];
+    return defaultNames.includes(system.name);
+  };
+
   const handleManualSave = () => {
     if (!system || !pack) return;
+    if (isDefaultName()) {
+      alert("PLEASE RE-IDENTIFY THE TARGET SYSTEM BEFORE COMMITTING. THE DEFAULT IDENTIFIER IS NOT PERMITTED.");
+      return;
+    }
     setSaving(true);
     
     const updatedPack = { ...pack, isDraft: false };
@@ -315,7 +325,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
               <X size={14} /> {pack.isDraft ? 'Discard Draft' : 'Cancel'}
             </button>
             <button 
-              disabled={saving || !system.name || system.name === 'NEW AI SYSTEM'}
+              disabled={saving || !system.name || isDefaultName()}
               onClick={handleSaveAndExecute} 
               className="blueprint-button blueprint-button-primary flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
             >

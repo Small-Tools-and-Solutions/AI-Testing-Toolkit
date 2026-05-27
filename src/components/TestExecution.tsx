@@ -208,9 +208,9 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 items-start">
         {/* Sidebar: Test List */}
         <aside className="lg:col-span-1 lg:sticky lg:top-8 h-fit">
-          <div className="blueprint-panel p-6 bg-blueprint-paper/20 max-h-[600px] flex flex-col">
+          <div className="blueprint-panel p-6 bg-blueprint-paper/20 max-h-[600px] flex flex-col border-blueprint-line-solid/20">
             <div className="flex items-center justify-between border-b border-blueprint-line pb-3 mb-4 shrink-0">
-              <h3 className="blueprint-label !mb-0">Assessment Test List</h3>
+              <h3 className="blueprint-label !mb-0 opacity-80">Assessment Test List</h3>
               <span className="font-mono text-xs text-blueprint-line-solid font-bold tracking-widest">{cases.length}</span>
             </div>
             <div className="flex-1 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 pr-1">
@@ -257,7 +257,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                     className="space-y-1 group/copy cursor-pointer relative"
                   >
                     <div className="flex items-center gap-3">
-                      <p className="blueprint-label opacity-40 text-xs">Test Prompt:</p>
+                      <p className="blueprint-label opacity-70 text-xs">Test Prompt:</p>
                       <div className={`transition-all ${copiedType === 'prompt' ? 'text-blueprint-success' : 'text-blueprint-line-solid opacity-0 group-hover/copy:opacity-100'}`}>
                         {copiedType === 'prompt' ? <CheckCircle2 size={14} /> : <Copy size={14} />}
                       </div>
@@ -273,8 +273,8 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                     )}
                   </div>
                 </div>
-                <div className="blueprint-panel p-4 text-center min-w-[120px] bg-blueprint-line-solid/5 border-blueprint-line-solid/20">
-                  <p className="blueprint-label !text-[10px] opacity-40 mb-1">Test ID</p>
+                <div className="blueprint-panel p-4 text-center min-w-[120px] bg-blueprint-line-solid/5 border-blueprint-line-solid/30">
+                  <p className="blueprint-label !text-[10px] opacity-70 mb-1">Test ID</p>
                   <p className="font-mono font-bold text-blueprint-line-solid uppercase text-xl tracking-widest leading-none">{currentCase.libraryId || `V_${(currentIndex + 1).toString().padStart(2, '0')}`}</p>
                 </div>
               </header>
@@ -286,7 +286,7 @@ export default function TestExecution({ id, onClose, onReport }: TestExecutionPr
                   </div>
                   <div 
                     onClick={() => handleCopy(currentCase.expectedBehaviour, 'expected')}
-                    className="blueprint-panel p-5 bg-blueprint-paper/40 font-mono text-sm leading-relaxed text-blueprint-white h-40 overflow-y-auto border-blueprint-line/30 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 cursor-pointer group/expected relative hover:bg-blueprint-line-solid/[0.02] transition-colors"
+                    className="blueprint-panel p-5 bg-blueprint-paper/40 font-mono text-sm leading-relaxed text-blueprint-white h-40 overflow-y-auto border-blueprint-line-solid/30 scrollbar-thin scrollbar-thumb-blueprint-line-solid/20 cursor-pointer group/expected relative hover:bg-blueprint-line-solid/[0.02] transition-colors"
                   >
                     <div className="h-full border-l border-blueprint-accent/20 pr-4 pl-4 whitespace-pre-wrap transition-colors">
                       {currentCase.expectedBehaviour}
