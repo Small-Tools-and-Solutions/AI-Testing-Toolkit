@@ -26,6 +26,11 @@ export default function Guide() {
       title: "View Report",
       icon: <FileText className="text-blueprint-line-solid" />,
       desc: "Select 'Report' to generate the executive summary. Access professional visualizations, charts, and detailed data logs of your audit."
+    },
+    {
+      title: "Interactive Guide",
+      icon: <Play className="text-blueprint-accent" />,
+      desc: "Watch our comprehensive video walkthrough to master the AI Audit Suite's advanced features and protocols."
     }
   ];
 
@@ -39,7 +44,7 @@ export default function Guide() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
         {steps.map((step, i) => (
           <div 
             key={i} 
@@ -54,9 +59,14 @@ export default function Guide() {
             
             <h3 className="text-xl font-bold uppercase mb-4 text-blueprint-white tracking-widest flex items-center gap-2">
               <span className="text-xs font-mono text-blueprint-line-solid/50">0{i + 1}.</span> {step.title}
+              {i === 5 && (
+                <button className="ml-2 p-1.5 border border-blueprint-accent text-blueprint-accent hover:bg-blueprint-accent hover:text-blueprint-paper transition-all">
+                  <Play size={14} fill="currentColor" />
+                </button>
+              )}
             </h3>
             
-            <p className="text-sm font-mono leading-relaxed text-blueprint-white/60 group-hover:text-blueprint-white/80 transition-colors">
+            <p className="text-sm font-mono leading-relaxed text-blueprint-white/60 group-hover:text-blueprint-white/80 transition-colors mb-4">
               {step.desc}
             </p>
           </div>
