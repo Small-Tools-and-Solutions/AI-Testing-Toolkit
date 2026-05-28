@@ -123,7 +123,7 @@ export default function TestPackEditor({ id, onClose, onExecute }: TestPackEdito
   const handleManualSave = () => {
     if (!system || !pack) return;
     if (isDefaultName()) {
-      alert("PLEASE RE-IDENTIFY THE TARGET SYSTEM BEFORE COMMITTING. THE DEFAULT IDENTIFIER IS NOT PERMITTED.");
+      alert("THE DEFAULT SYSTEM NAME IS NOT PERMITTED. PLEASE CHANGE THE TARGET SYSTEM NAME—THIS IS A REQUIRED FIELD.");
       return;
     }
     setSaving(true);
